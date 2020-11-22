@@ -1,0 +1,2 @@
+# pernahke.id
+pernah ke
