@@ -47992,8 +47992,8 @@ if (document.getElementById('example')) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\hwija\OneDrive\Desktop\pernahke\pernahke\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\hwija\OneDrive\Desktop\pernahke\pernahke\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\Juuni\Documents\pernahke com\pernahke.id\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\Juuni\Documents\pernahke com\pernahke.id\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

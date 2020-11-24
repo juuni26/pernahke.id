@@ -4,7 +4,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>Pernahke landing</title>
+        <link rel="shortcut icon" href="https://www.iconninja.com/files/795/910/519/flash-saver-superhero-earth-super-hero-man-icon.svg" type="image/x-icon">
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;600&display=swap" rel="stylesheet">
@@ -45,22 +46,20 @@
             }
 
             .title {
-                font-size: 84px;
+                font-size: 4rem;
             }
+.m-b-md{
+    margin-bottom: 5vh;
+}
+           
+           .undergoing {
+               position: absolute;
+               left: 50%;
+               transform: translateX(-50%);
+               bottom: 2vh;
+           }
 
-            .links > a {
-                color: #636b6f;
-                padding: 0 25px;
-                font-size: 13px;
-                font-weight: 600;
-                letter-spacing: .1rem;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .m-b-md {
-                margin-bottom: 30px;
-            }
+            
         </style>
     </head>
     <body>
@@ -81,20 +80,15 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Laravel
+                    Pernahke.id
                 </div>
-
-                <div class="links">
-                    <a href="https://laravel.com/docs">Docs</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://blog.laravel.com">Blog</a>
-                    <a href="https://nova.laravel.com">Nova</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://vapor.laravel.com">Vapor</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
-                </div>
+            <div>
+            <img src="https://i.pinimg.com/originals/0d/db/85/0ddb85a5136c466444647c7f8070425e.gif" alt="">
             </div>
+               
+            </div>
+            <div class="undergoing">
+            underprocess . . .</div>
         </div>
     </body>
 </html>
