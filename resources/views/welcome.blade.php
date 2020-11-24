@@ -58,6 +58,21 @@
                transform: translateX(-50%);
                bottom: 2vh;
            }
+           .span {
+               font-size: 1.4rem;
+               display: block;
+               margin-top: 0;
+               
+                              
+           } .span a {
+               font-weight: 600;
+               color: green;
+                    
+            
+           }
+           .span a:hover {
+               color: darkkhaki;
+           }
 
             
         </style>
@@ -80,7 +95,8 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Pernahke.id
+                    Pernahke.id 
+                    <span class="span"><a href="/inputan">go to page inputan</a></span>
                 </div>
             <div>
             <img src="https://i.pinimg.com/originals/0d/db/85/0ddb85a5136c466444647c7f8070425e.gif" alt="">

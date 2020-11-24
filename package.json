@@ -20,5 +20,10 @@
         "resolve-url-loader": "^3.1.0",
         "sass": "^1.15.2",
         "sass-loader": "^8.0.0"
+    },
+    "dependencies": {
+        "@ant-design/icons": "^4.3.0",
+        "antd": "^4.8.3",
+        "react-router-dom": "^5.2.0"
     }
 }

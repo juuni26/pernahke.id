@@ -1,0 +1,23 @@
+.container {
+    margin: 0;
+    width: 100%;
+    height: 100vh;    
+}
+
+.slashed {
+    width: 80%;
+    margin: 0 10%;
+    padding-top: 1px;
+    .hed {
+        margin-top: 5vh;
+        font-size: 2rem;
+        color: darkgreen;
+        text-align: center;
+    }
+    .hedd {
+        margin: 5vh 0;
+        font-size: 1.6rem;
+        color: darkgreen;   
+        text-align: center;
+    }
+}
