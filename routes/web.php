@@ -18,3 +18,8 @@ Route::get('/', function () {
 Route::get('inputan', function () {
     return view('inputan');
 });
+
+route::post('create/provinsi','pernahControl@insProvinsi');
+route::post('create/kota','pernahControl@insKota');
+route::post('create/tempat','pernahControl@insTempat');
+
