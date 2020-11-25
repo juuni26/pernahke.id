@@ -20,10 +20,10 @@ class Provinsi extends Model
         ]);
         $check = $ins->save();
 
-        if($check){
-            return 'yes';
-        } else {
+        if(!$check){
             return 'no';
+        } else {
+            return $ins->id;
         }
     }
 }
