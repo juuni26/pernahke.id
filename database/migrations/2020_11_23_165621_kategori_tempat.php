@@ -18,6 +18,17 @@ class KategoriTempat extends Migration
             $table->unsignedBigInteger('kategoris_id');
             $table->unsignedBigInteger('tempats_id');
             $table->timestamps();
+
+            $table->foreign('kategoris_id')
+                ->references('id')
+                ->on('kategoris')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+            $table->foreign('tempats_id')
+                ->references('id')
+                ->on('tempats')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
         });
     }
 

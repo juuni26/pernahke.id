@@ -9,8 +9,9 @@
 <body>
     <div id="app"></div>
 </body>
-<script src="{{ asset('js/app.js') }}"></script>
+
 <script>
- var csrf_token = '<?php echo csrf_token(); ?>'; 
+var csrf_token = '<?php echo csrf_token(); ?>'; 
 </script>
+<script src="{{ asset('js/app.js') }}"></script>
 </html>

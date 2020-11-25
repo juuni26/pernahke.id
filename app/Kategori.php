@@ -12,8 +12,18 @@ class Kategori extends Model
         'kategori',
     ];
 
-    public static function insProvinsi($kategori){
-        $ins = new Provinsi([
+    public function tempats(){
+        return $this->belongsToMany(
+            Tempat::class,
+            'kategoris_tempats',
+            'kategoris_id',
+            'tempats_id'
+        );
+        
+    }
+
+    public static function insKategori($kategori){
+        $ins = new Kategori([
             'kategori' => $kategori,
         ]);
         $check = $ins->save();
@@ -21,7 +31,7 @@ class Kategori extends Model
         if(!$check){
             return 'no';
         } else {
-            return $ins->id;
+            return $ins;
         }
     }
 }

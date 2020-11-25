@@ -36,10 +36,11 @@ class pernahControl extends Controller
                 'message' => 'Gagal memasukkan provinsi!',
             ]);
         } else {
+            // $data = Provinsi::where('provinsi',$provinsi)->where('foto',$image)->first();
             return response()->json([
                 'status'  => 'success',
                 'message' => 'Berhasil memasukkan provinsi!',
-                'id'      => $ins,
+                'data'      => $ins,
             ]);
         }
 
@@ -80,7 +81,7 @@ class pernahControl extends Controller
             return response()->json([
                 'status'  => 'success',
                 'message' => 'Berhasil memasukkan kota!',
-                'id'      => $ins,
+                'data'      => $ins,
             ]);
         }
     }
@@ -118,13 +119,13 @@ class pernahControl extends Controller
             $image = $req->image_url;
         } 
 
-        if(!$req->budget){
+        if(!$req->biaya){
             return response()->json([
                 'status'  => 'failed',
-                'message' => 'Budget tidak boleh kosong!'
+                'message' => 'Biaya tidak boleh kosong!'
             ]);
         }else{
-            $biaya = $req->budget;
+            $biaya = $req->biaya;
         }
 
         if(!$req->deskripsi){
@@ -165,6 +166,7 @@ class pernahControl extends Controller
             return response()->json([
                 'status'  => 'success',
                 'message' => 'Berhasil memasukkan tempat!',
+                'data'    => $ins
             ]);
         }
 
@@ -192,8 +194,37 @@ class pernahControl extends Controller
             return response()->json([
                 'status'  => 'success',
                 'message' => 'Berhasil memasukkan kategori!',
-                'id'      => $ins,
+                'data'      => $ins,
             ]);
         }
     }
+
+    public function getProvinsi(){
+        $data = Provinsi::all();
+        return response()->json([
+            'data' => $data,
+        ]);
+    }
+
+    public function getKota(){
+        $data = Kota::all();
+        return response()->json([
+            'data' => $data,
+        ]);
+    }
+
+    public function getKategori(){
+        $data = Kategori::all();
+        return response()->json([
+            'data' => $data,
+        ]);
+    }
+    public function getTempat(){
+        $data = Tempat::first();
+        dd($data->kategoris()->kategori);
+        return response()->json([
+            'data' => $data->kategoris(),
+        ]);
+    }
+
 }

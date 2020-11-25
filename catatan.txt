@@ -1,0 +1,4 @@
+route::get('data/provinsi','pernahControl@getProvinsi'); ->udah
+route::get('data/kota','pernahControl@getKota');        ->udah
+route::get('data/tempat','pernahControl@getTempat');    ->belom
+route::get('data/kategori','pernahControl@getKategori');    ->udah

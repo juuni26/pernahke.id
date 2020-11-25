@@ -12,6 +12,10 @@ class Provinsi extends Model
         'provinsi',
         'foto',
     ];
+    
+    public function kotas(){
+        return $this->hasMany('App\Kota');
+    }
 
     public static function insProvinsi($prov,$image){
         $ins = new Provinsi([
@@ -19,11 +23,10 @@ class Provinsi extends Model
             'foto'     => $image,
         ]);
         $check = $ins->save();
-
         if(!$check){
             return 'no';
         } else {
-            return $ins->id;
+            return $ins;
         }
     }
 }

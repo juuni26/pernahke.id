@@ -12,11 +12,16 @@ class Kota extends Model
     protected $fillable = [
         'kota',
         'provinsis_id',
-        'foto',
+        'foto'
     ];
 
+    public function provinsis(){
+        return $this->belongsTo('App\Provinsi');
+    }
+
     public static function insKota($prov,$kota,$image){
-        $ins = new Provinsi([
+        
+        $ins = new Kota([
             'kota'          => $kota,
             'provinsis_id'  => $prov,
             'foto'          => $image,
@@ -24,7 +29,7 @@ class Kota extends Model
         $check = $ins->save();
 
         if($check){
-            return 'yes';
+            return $ins;
         } else {
             return 'no';
         }

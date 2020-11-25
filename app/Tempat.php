@@ -7,8 +7,6 @@ use App\Tempat;
 
 class Tempat extends Model
 {
-    
-
     protected $table = 'tempats';
     protected $fillable = [
         'tempat',
@@ -21,7 +19,17 @@ class Tempat extends Model
         'hashtag'
     ];
 
+    public function kategoris(){
+        return $this->belongsToMany(
+            Kategori::class,
+            'kategoris_tempats',
+            'tempats_id',
+            'kategoris_id',
+        );
+    }
+
     public static function insTempat($kota,$tempat,$alamat,$biaya,$deskripsi,$image,$hashtag,$kategori,$gmaps = NULL){
+        
         $ins = new Tempat([
             'tempat'            =>$tempat,
             'kotas_id'          =>$kota,
@@ -33,9 +41,9 @@ class Tempat extends Model
             'hashtag'           =>$hashtag,
         ]);
         $check = $ins->save();
-
+        $ins->kategoris()->attach(explode(',',$kategori));
         if($check){
-            return 'yes';
+            return $ins;
         } else {
             return 'no';
         }

@@ -22,4 +22,10 @@ Route::get('inputan', function () {
 route::post('create/provinsi','pernahControl@insProvinsi');
 route::post('create/kota','pernahControl@insKota');
 route::post('create/tempat','pernahControl@insTempat');
+route::post('create/kategori','pernahControl@insKategori');
+
+route::get('data/provinsi','pernahControl@getProvinsi');
+route::get('data/kota','pernahControl@getKota');
+route::get('data/tempat','pernahControl@getTempat');
+route::get('data/kategori','pernahControl@getKategori');
 

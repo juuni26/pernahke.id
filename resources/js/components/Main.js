@@ -1,6 +1,6 @@
-import React, { useContext, useLayoutEffect,useState } from "react";
+import React, { useContext, useLayoutEffect, useState,useEffect } from "react";
 
-import { Form, Input, Button, Space, Divider, Collapse,Select, InputNumber,} from 'antd';
+import { Form, Input, Button, Space, Divider, Collapse, Select, InputNumber, Table,message } from 'antd';
 import { MinusCircleOutlined, PlusOutlined, CaretRightOutlined } from '@ant-design/icons';
 import { capitalize } from "lodash";
 import Axios from 'axios';
@@ -14,119 +14,252 @@ const Main = () => {
 
   // const { token } = useContext(BaseContext);
 
-  const [listKota,setListKota] = useState(null);
-  const [listProvinsi,setListProvinsi] = useState(null);
-  const [listTempat,setListTempat] = useState(null);
+  const [listKota, setListKota] = useState(null);
+  const [listProvinsi, setListProvinsi] = useState(null);
+  const [listTempat, setListTempat] = useState(null);
+  const [listKategori, setListKategori] = useState(null);
+
+  const [form_provinsi] = Form.useForm();
+  const [form_kota] = Form.useForm();
+  const [form_kategori] = Form.useForm();
+  const [form_tempat] = Form.useForm();
+
+
+  useEffect(() => {
+    Axios.defaults.xsrfHeaderName = "X-CSRFToken";
+    
+    // set data provinsi
+    Axios({
+      method: "get",
+      url: "/data/provinsi",
+      headers: {      
+        "X-CSRF-TOKEN": csrf_token
+      }
+    })
+      .then(response => {
+        console.log(response.data.data,"get provinsi");
+        setListProvinsi(response.data.data);
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
+
+      // set data kota
+    Axios({
+      method: "get",
+      url: "/data/kota",
+      headers: {      
+        "X-CSRF-TOKEN": csrf_token
+      }
+    })
+      .then(response => {
+        console.log(response.data.data,"get kota");
+        setListKota(response.data.data);
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
+
+       // set data kategori
+    Axios({
+      method: "get",
+      url: "/data/kategori",
+      headers: {      
+        "X-CSRF-TOKEN": csrf_token
+      }
+    })
+      .then(response => {
+        console.log(response.data.data,"get kategori");
+        setListKategori(response.data.data);
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
+    
+       // set data tempat
+    Axios({
+      method: "get",
+      url: "/data/tempat",
+      headers: {      
+        "X-CSRF-TOKEN": csrf_token
+      }
+    })
+      .then(response => {
+        console.log(response.data.data,"get tempat");
+        setListTempat(response.data.data);
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
+  
+  }, [])
+
 
   const { Panel } = Collapse;
+  const { Column } = Table;
 
   const onFinishProvinsi = values => {
-    console.log('Received values of form:', values);
-    let image_url = !values.image_url || values.image_url.length ==0 ? []:  values.image_url;
-console.log(image_url);
+    
+    let image_url = !values.image_url || values.image_url.length == 0 ? [] : values.image_url;
+    console.log(image_url);
 
-    if(values.nama){
+    if (values.nama) {
       Axios.defaults.xsrfHeaderName = "X-CSRFToken";
 
       var bodyFormData = new FormData();
-      bodyFormData.append("nama_provinsi",_.startCase(_.toLower(values.nama)));  
-      bodyFormData.append("image_url",JSON.stringify(image_url));  
+      bodyFormData.append("nama_provinsi", values.nama.toLowerCase());
+      bodyFormData.append("image_url", JSON.stringify(image_url));
 
       Axios({
-          method: "post",
-          url: "/create/provinsi",
-          data: bodyFormData,
-          headers: {
-              "Content-Type": "multipart/form-data",
-              "X-CSRF-TOKEN": csrf_token
-          }
+        method: "post",
+        url: "/create/provinsi",
+        data: bodyFormData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "X-CSRF-TOKEN": csrf_token
+        }
       })
-          .then(response => {
-              if (response.data.status === "failed") {
-                  message.error(response.data.message);
-              } else {
-                  message.success(response.data.message);                  
-              }
-              
-          })
-          .catch(function (response) {
-              console.log(response);
-          });
-    }    
+        .then(response => {
+          if (response.data.status === "failed") {            
+            message.error(response.data.message);
+          } else {          
+           let neww = listProvinsi.slice();
+           neww.unshift(response.data.data);
+            setListProvinsi(neww);           
+            message.success(response.data.message);
+            form_provinsi.resetFields();
+          }
+
+        })
+        .catch(function (response) {
+          console.log(response);
+        });
+    }
   };
 
   const onFinishKota = values => {
-
-    let image_url = !values.image_url || values.image_url.length ==0 ? []:  values.image_url;
-    if(values.nama){
+    console.log(values);
+    let image_url = !values.image_url || values.image_url.length == 0 ? [] : values.image_url;
+    if (values.nama) {
       Axios.defaults.xsrfHeaderName = "X-CSRFToken";
 
       var bodyFormData = new FormData();
-      bodyFormData.append("nama_provinsi",_.startCase(_.toLower(values.provinsi)));  
-      bodyFormData.append("nama_kota",_.startCase(_.toLower(values.nama)));  
-      bodyFormData.append("image_url",JSON.stringify(image_url));  
+      bodyFormData.append("id_provinsi", +values.provinsi);
+      bodyFormData.append("nama_kota", values.nama.toLowerCase());
+      bodyFormData.append("image_url", JSON.stringify(image_url));
 
       Axios({
-          method: "post",
-          url: "/create/kota",
-          data: bodyFormData,
-          headers: {
-              "Content-Type": "multipart/form-data",
-              "X-CSRF-TOKEN": csrf_token
-          }
+        method: "post",
+        url: "/create/kota",
+        data: bodyFormData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "X-CSRF-TOKEN": csrf_token
+        }
       })
-          .then(response => {
-              if (response.data.status === "failed") {
-                  message.error(response.data.message);
-              } else {
-                  message.success(response.data.message);                  
-              }              
-          })
-          .catch(function (response) {
-              console.log(response);
-          });
-    }    
-   
+        .then(response => {
+          if (response.data.status === "failed") {
+            message.error(response.data.message);
+          } else {
+            let neww = listKota.slice();
+            neww.unshift(response.data.data);
+             setListKota(neww);           
+             message.success(response.data.message);
+             form_kota.resetFields();
+          }
+        })
+        .catch(function (response) {
+          console.log(response);
+        });
+    }
+
   };
+
+  const onFinishKategori = values => {
+    console.log('Received values of form:', values.kategori.toLowerCase());
+
+
+    if (values.kategori) {
+      Axios.defaults.xsrfHeaderName = "X-CSRFToken";
+
+      var bodyFormData = new FormData();
+      bodyFormData.append("kategori", values.kategori.toLowerCase());
+
+      Axios({
+        method: "post",
+        url: "/create/kategori",
+        data: bodyFormData,
+        headers: {      
+          "X-CSRF-TOKEN": csrf_token
+        }
+      })
+        .then(response => {
+          if (response.data.status === "failed") {
+            message.error(response.data.message);
+          } else {
+           
+            let neww = listKategori.slice();
+            neww.unshift(response.data.data);
+            
+             setListKategori(neww);           
+             message.success(response.data.message);
+             form_kategori.resetFields();
+          }
+        })
+        .catch(function (response) {
+          console.log(response);
+        });
+    }
+
+
+  };
+
+
   const onFinishTempat = values => {
     console.log('Received values of form:', values);
 
-    let image_url = !values.image_url || values.image_url.length ==0 ? []:  values.image_url;
-    if(values.kota){
+    let image_url = !values.image_url || values.image_url.length == 0 ? [] : values.image_url;
+    if (values.kota) {
       Axios.defaults.xsrfHeaderName = "X-CSRFToken";
 
-      var bodyFormData = new FormData();
-      bodyFormData.append("nama_provinsi",_.startCase(_.toLower(values.provinsi)));  
-      bodyFormData.append("nama_kota",_.startCase(_.toLower(values.kota)));  
-      bodyFormData.append("nama_tempat",_.startCase(_.toLower(values.tempat)));  
-      bodyFormData.append("alamat",values.alamat);  
-      bodyFormData.append("budget",values.Budget); 
-      bodyFormData.append("deskripsi",values.deskripsi);  
-      bodyFormData.append("image_url",JSON.stringify(image_url));  
+      var bodyFormData = new FormData();    
+      bodyFormData.append("id_kota", +values.kota);
+      bodyFormData.append("nama_tempat", values.tempat.toLowerCase());
+      bodyFormData.append("alamat", values.alamat);
+      bodyFormData.append("biaya", String(values.Budget));
+      bodyFormData.append("hashtag", values.hastag);
+      bodyFormData.append("deskripsi",  values.deskripsi);
+      bodyFormData.append("id_kategori", values.kategori);
+      bodyFormData.append("image_url", JSON.stringify(image_url));
 
       Axios({
-          method: "post",
-          url: "/create/tempat",
-          data: bodyFormData,
-          headers: {
-              "Content-Type": "multipart/form-data",
-              "X-CSRF-TOKEN": csrf_token
-          }
+        method: "post",
+        url: "/create/tempat",
+        data: bodyFormData,
+        headers: {        
+          "X-CSRF-TOKEN": csrf_token
+        }
       })
-          .then(response => {
-              if (response.data.status === "failed") {
-                  message.error(response.data.message);
-              } else {
-                  message.success(response.data.message);                  
-              }              
-          })
-          .catch(function (response) {
-              console.log(response);
-          });
-    }    
+        .then(response => {
+          if (response.data.status === "failed") {
+            message.error(response.data.message);
+          } else {
+            // let neww = listTempat.slice();
+            // neww.unshift(response.data.data);            
+            //  setListTempat(neww);           
 
-   
+             message.success(response.data.message);
+             form_tempat.resetFields();
+          }
+        })
+        .catch(function (response) {
+          console.log(response);
+        });
+    }
+
+
   };
+
 
 
 
@@ -145,13 +278,13 @@ console.log(image_url);
         <Panel header="Inputan Provinsi" key="1" className="site-collapse-custom-panel">
 
           {/* inputan provinsi */}
-          <Form name="dynamic_form_nest_item" onFinish={onFinishProvinsi} autoComplete="off"  >
+          <Form form={form_provinsi} name="dynamic_form_nest_item" onFinish={onFinishProvinsi} autoComplete="off"  >
             <Form.Item
               name="nama"
               label="Nama Provinsi"
               placeholder="Nama Provinsi"
               rules={[{ required: true, message: 'Nama provinsi kosong' }]}
-              labelCol={{span:4}}
+              labelCol={{ span: 4 }}
               labelAlign="left"
             >
               <Input placeholder="Nama provinsi" />
@@ -160,15 +293,14 @@ console.log(image_url);
               {(fields, { add, remove }) => (
                 <>
                   {fields.map(field => (
-                    <Space key={field.key} style={{ display: 'flex', marginBottom: 8,width:'100%' }} align="baseline">
+                    <Space key={field.key} style={{ display: 'flex', marginBottom: 8, width: '100%' }} align="baseline">
                       <Form.Item
-                        {...field}
-                        name={[field.name, 'first']}
+                        {...field}                        
                         label="Link Foto"
                         fieldKey={[field.fieldKey, 'first']}
                         rules={[{ required: true, message: 'nama provinsi kosong' }]}
-                        
-                    labelAlign="left"
+
+                        labelAlign="left"
                       >
                         <Input placeholder="Masukkan link foto" />
                       </Form.Item>
@@ -192,24 +324,27 @@ console.log(image_url);
 
         </Panel>
         <Panel header="Inputan Kota" key="2" className="site-collapse-custom-panel">
-          <Form name="kota" onFinish={onFinishKota} autoComplete="off">
+          <Form form={form_kota} name="kota" onFinish={onFinishKota} autoComplete="off">
             <Form.Item
               name="provinsi"
               label="Pilih Provinsi"
               hasFeedback
               rules={[{ required: true, message: 'Harap pilih Provinsi!' }]}
-              labelCol={{span:4}}
+              labelCol={{ span: 4 }}
               labelAlign="left"
             >
               <Select placeholder="Pronvisi">
-                <Option value="china">China</Option>                
+              {listProvinsi&&listProvinsi.length !== 0? listProvinsi.map(provinsi=>(
+                <Option value={provinsi.id}>{provinsi.provinsi}</Option>
+              )) :""}
+                
               </Select>
             </Form.Item>
             <Form.Item
               name="nama"
-              label="Nama Kota"              
+              label="Nama Kota"
               rules={[{ required: true, message: 'Nama Kota kosong' }]}
-              labelCol={{span:4}}
+              labelCol={{ span: 4 }}
               labelAlign="left"
             >
               <Input placeholder="Nama Kota" />
@@ -221,11 +356,11 @@ console.log(image_url);
                     <Space key={field.key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
                       <Form.Item
                         {...field}
-                        name={[field.name, 'first']}
+                        
                         label="Link Foto"
                         fieldKey={[field.fieldKey, 'first']}
-                        rules={[{ required: true, message: 'nama provinsi kosong' }]}                  
-              labelAlign="left"
+                        rules={[{ required: true, message: 'nama provinsi kosong' }]}
+                        labelAlign="left"
                       >
                         <Input placeholder="Masukkan link foto" />
                       </Form.Item>
@@ -248,61 +383,99 @@ console.log(image_url);
           </Form>
 
         </Panel>
-        <Panel header="Inputan Tempat Wisata" key="3" className="site-collapse-custom-panel">
 
-        <Form name="tempat" onFinish={onFinishTempat} autoComplete="off">
+
+        <Panel header="Inputan kategori" key="3" className="site-collapse-custom-panel">
+          <Form form={form_kategori} name="kategori" onFinish={onFinishKategori} autoComplete="off">
             <Form.Item
-              name="provinsi"
-              label="Pilih Provinsi"
-              hasFeedback
-              rules={[{ required: true, message: 'Harap Pilih Provinsi!' }]}
-              labelCol={{span:4}}
+              name="kategori"
+              rules={[{ required: true, message: 'Nama kategori kosong' }]}
+              labelCol={{ span: 4 }}
               labelAlign="left"
             >
-              <Select placeholder="Pronvisi">
-                <Option value="china">China</Option>                
-              </Select>
+              <Input placeholder="Nama kategori" />
             </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                Submit
+        </Button>
+            </Form.Item>
+          </Form>
+
+        </Panel>
+
+
+        <Panel header="Inputan Tempat Wisata" key="4" className="site-collapse-custom-panel">
+
+          <Form form={form_tempat} name="tempat" onFinish={onFinishTempat} autoComplete="off">
+          
             <Form.Item
               name="kota"
               label="Pilih Kota"
               hasFeedback
               rules={[{ required: true, message: 'Harap Pilih Kota!' }]}
-              labelCol={{span:4}}
+              labelCol={{ span: 4 }}
               labelAlign="left"
             >
               <Select placeholder="Kota">
-                <Option value="china">Bekasi</Option>                
+              {listKota&&listKota.length !== 0? listKota.map(kota=>(
+                <Option value={kota.id}>{kota.kota}</Option>
+              )) :""}
               </Select>
             </Form.Item>
+
             <Form.Item
               name="tempat"
-              label="Nama Tempat"              
+              label="Nama Tempat"
               rules={[{ required: true, message: 'Nama Tempat kosong' }]}
-              labelCol={{span:4}}
+              labelCol={{ span: 4 }}
               labelAlign="left"
             >
               <Input placeholder="Nama Tempat" />
             </Form.Item>
-            <Form.Item name="alamat" label="Alamat"   labelCol={{span:4}}
+
+            <Form.Item name="alamat" label="Alamat" labelCol={{ span: 4 }}
               labelAlign="left" rules={[{ required: true, message: 'Alamat kosong' }]}>
-        <Input.TextArea />        
-      </Form.Item>
+              <Input.TextArea />
+            </Form.Item>
 
-      <Form.Item label="Estimasi Biaya" labelCol={{span:4}}
+            <Form.Item label="Estimasi Biaya" labelCol={{ span: 4 }}
               labelAlign="left">
-        <Form.Item name="Budget" noStyle 
-        rules={[{ required: true, message: 'Biaya kosong' }]}
-        
-        >
-          <InputNumber min={1000} />
-        </Form.Item>
-        <span className="ant-form-text"> Rupiah</span>
-      </Form.Item>
+              <Form.Item name="Budget" noStyle
+                rules={[{ required: true, message: 'Biaya kosong' }]}
 
-            <Form.Item name="deskripsi" label="Deskripsi"   labelCol={{span:4}}
+              >
+                <InputNumber min={1000} />
+              </Form.Item>
+              <span className="ant-form-text"> Rupiah</span>
+            </Form.Item>
+
+            <Form.Item
+              name="hastag"
+              label="Nama hastag"
+              rules={[{ required: true, message: 'Nama hastag kosong' }]}
+              labelCol={{ span: 4 }}
+              labelAlign="left"
+            >
+              <Input placeholder="contoh (banyak input pake koma): kudus,semarang,gunung," />
+            </Form.Item>
+
+            <Form.Item name="deskripsi" label="Deskripsi" labelCol={{ span: 4 }}
               labelAlign="left" rules={[{ required: true, message: 'Deskripsi kosong' }]}>
-        <Input.TextArea />        
+              <Input.TextArea />
+            </Form.Item>
+
+
+            <Form.Item
+        name="kategori"
+        label="Pilih kategori"
+        rules={[{ required: true, message: 'Please select one kategory!', type: 'array' }]}
+      >
+        <Select mode="multiple" placeholder="Please select category">
+        {listKategori&&listKategori.length !== 0? listKategori.map(kategori=>(
+                <Option value={kategori.id}>{kategori.kategori}</Option>
+              )) :""}
+        </Select>
       </Form.Item>
 
 
@@ -313,7 +486,7 @@ console.log(image_url);
                     <Space key={field.key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
                       <Form.Item
                         {...field}
-                        name={[field.name, 'first']}
+                        
                         label="Link Foto"
                         fieldKey={[field.fieldKey, 'first']}
                         rules={[{ required: true, message: 'nama provinsi kosong' }]}
@@ -336,12 +509,121 @@ console.log(image_url);
                 Submit
         </Button>
             </Form.Item>
-          </Form>        
+          </Form>
 
         </Panel>
       </Collapse>
 
       <h3 className="hedd">Check Table </h3>
+
+      <Collapse
+        bordered={false}
+        defaultActiveKey={['5']}
+        expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
+        className="site-collapse-custom-collapse"
+      >
+        <Panel header="Table Provinsi" key="5" className="site-collapse-custom-panel">
+          {listProvinsi? <Table dataSource={listProvinsi}>
+            <Column
+              title="Nama Provinsi"
+              dataIndex="provinsi"
+              key="provinsi"
+
+            />
+            <Column
+              title="Foto"
+              dataIndex="foto"
+              key="foto"
+            />
+          </Table>:""} 
+
+        </Panel>
+
+        <Panel header="Table kota" key="6" className="site-collapse-custom-panel">
+        {listKota? <Table dataSource={listKota}>
+            <Column
+              title="Nama Provinsi"
+              dataIndex="provinsis_id"
+              key="provinsis_id"
+              render={id=>
+              
+              listProvinsi.filter(provinsi=> +provinsi.id===+id)[0].provinsi }
+
+            />
+            <Column
+              title="Nama Kota"
+              dataIndex="kota"
+              key="kota"
+
+            />
+            <Column
+              title="Foto"
+              dataIndex="foto"
+              key="foto"
+
+            />
+          </Table>:""}
+
+        </Panel>
+
+
+        <Panel header="Table Kategori" key="7" className="site-collapse-custom-panel">
+        {listKategori? <Table dataSource={listKategori}>
+            <Column
+              title="Nama Kategori"
+              dataIndex="kategori"
+              key="kategori"
+            />
+
+
+          </Table>:""}     
+
+        </Panel>
+
+        <Panel header="Table Tempat" key="8" className="site-collapse-custom-panel">
+          <Table dataSource="">
+            <Column
+              title="Nama Kota"
+              dataIndex="kotas_id"
+              key="kotas_id"
+              render={id=>              
+              listKota.filter(kota=> +kota.id===+id)[0].kota }
+            />
+            <Column
+              title="Nama Tempat"
+              dataIndex="tempat"
+              key="tempat"
+            />
+            <Column
+              title="Alamat"
+              dataIndex="alamat"
+              key="alamat"
+            />
+            <Column
+              title="Foto"
+              dataIndex="foto"
+              key="foto"
+            />
+            <Column
+              title="Biaya"
+              dataIndex="biaya"
+              key="biaya"
+            />
+            <Column
+              title="Hashtag"
+              dataIndex="hashtag"
+              key="hashtag"
+            />
+            <Column
+              title="Deskripsi"
+              dataIndex="deskripsi"
+              key="deskripsi"
+            />
+
+          </Table>
+
+        </Panel>
+      </Collapse>
 
 
     </div>
