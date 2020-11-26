@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use DB;
 
 use App\Provinsi;
 use App\Kota;
@@ -36,7 +37,6 @@ class pernahControl extends Controller
                 'message' => 'Gagal memasukkan provinsi!',
             ]);
         } else {
-            // $data = Provinsi::where('provinsi',$provinsi)->where('foto',$image)->first();
             return response()->json([
                 'status'  => 'success',
                 'message' => 'Berhasil memasukkan provinsi!',
@@ -220,10 +220,22 @@ class pernahControl extends Controller
         ]);
     }
     public function getTempat(){
-        $data = Tempat::first();
-        dd($data->kategoris()->kategori);
+        $data = Tempat::all();
+        foreach($data as $d){
+            $item[]= [
+                'tempat'        => $d->tempat,
+                'alamat'        => $d->alamat,
+                'gmaps'         => $d->gmaps,
+                'foto'          => $d->foto,
+                'biaya'         => $d->biaya,
+                'deskripsi'     => $d->deskripsi,
+                'hashtag'       => $d->hashtag,
+                'kota'          => $d->kotas->kota,
+                'kategori'      => $d->kategoris->pluck('kategori')->toArray() ,
+            ];
+        }
         return response()->json([
-            'data' => $data->kategoris(),
+            'data' => $item,
         ]);
     }
 
