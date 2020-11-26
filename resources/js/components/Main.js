@@ -123,7 +123,7 @@ const Main = () => {
           if (response.data.status === "failed") {            
             message.error(response.data.message);
           } else {          
-           let neww = listProvinsi.slice();
+           let neww = listProvinsi ? listProvinsi.slice():[];
            neww.unshift(response.data.data);
             setListProvinsi(neww);           
             message.success(response.data.message);
@@ -161,7 +161,7 @@ const Main = () => {
           if (response.data.status === "failed") {
             message.error(response.data.message);
           } else {
-            let neww = listKota.slice();
+            let neww = listKota ? listKota.slice():[];
             neww.unshift(response.data.data);
              setListKota(neww);           
              message.success(response.data.message);
@@ -198,7 +198,7 @@ const Main = () => {
             message.error(response.data.message);
           } else {
            
-            let neww = listKategori.slice();
+            let neww = listKategori?listKategori.slice():[];
             neww.unshift(response.data.data);
             
              setListKategori(neww);           

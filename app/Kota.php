@@ -19,6 +19,10 @@ class Kota extends Model
         return $this->belongsTo('App\Provinsi');
     }
 
+    public function tempats(){
+        return $this->hasMany('App\Tempat');
+    }
+
     public static function insKota($prov,$kota,$image){
         
         $ins = new Kota([

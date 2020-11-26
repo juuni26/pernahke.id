@@ -24,8 +24,12 @@ class Tempat extends Model
             Kategori::class,
             'kategoris_tempats',
             'tempats_id',
-            'kategoris_id',
+            'kategoris_id'
         );
+    }
+
+    public function kotas(){
+        return $this->belongsTo('App\Kota');
     }
 
     public static function insTempat($kota,$tempat,$alamat,$biaya,$deskripsi,$image,$hashtag,$kategori,$gmaps = NULL){
