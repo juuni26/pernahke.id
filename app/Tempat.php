@@ -46,6 +46,7 @@ class Tempat extends Model
         ]);
         $check = $ins->save();
         $ins->kategoris()->attach(explode(',',$kategori));
+       
         if($check){
             return $ins;
         } else {

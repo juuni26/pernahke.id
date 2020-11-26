@@ -163,10 +163,22 @@ class pernahControl extends Controller
                 'message' => 'Gagal memasukkan tempat!'
             ]);
         } else {
+            $data = array(
+                'tempat'        => $ins->tempat,
+                'alamat'        => $ins->alamat,
+                'gmaps'         => $ins->gmaps,
+                'foto'          => $ins->foto,
+                'biaya'         => $ins->biaya,
+                'deskripsi'     => $ins->deskripsi,
+                'hashtag'       => $ins->hashtag,
+                'kota'          => $ins->kotas->kota,
+                'kategori'      => $ins->kategoris->pluck('kategori')->toArray() 
+            );
+            $data = (object) $data;
             return response()->json([
-                'status'  => 'success',
-                'message' => 'Berhasil memasukkan tempat!',
-                'data'    => $ins
+                'status'        => 'success',
+                'message'       => 'Berhasil memasukkan tempat!',
+                'data'          => $data
             ]);
         }
 

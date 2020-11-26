@@ -244,10 +244,10 @@ const Main = () => {
           if (response.data.status === "failed") {
             message.error(response.data.message);
           } else {
-            // let neww = listTempat.slice();
-            // neww.unshift(response.data.data);            
-            //  setListTempat(neww);           
-
+            let neww = listTempat.slice();
+            neww.unshift(response.data.data);            
+             setListTempat(neww);           
+            console.log(response.data.data);
              message.success(response.data.message);
              form_tempat.resetFields();
           }
@@ -581,13 +581,12 @@ const Main = () => {
         </Panel>
 
         <Panel header="Table Tempat" key="8" className="site-collapse-custom-panel">
-          <Table dataSource="">
+          {listTempat?<Table dataSource={listTempat}>
             <Column
               title="Nama Kota"
-              dataIndex="kotas_id"
-              key="kotas_id"
-              render={id=>              
-              listKota.filter(kota=> +kota.id===+id)[0].kota }
+              dataIndex="kota"
+              key="kota"
+             
             />
             <Column
               title="Nama Tempat"
@@ -620,7 +619,7 @@ const Main = () => {
               key="deskripsi"
             />
 
-          </Table>
+          </Table>:""}
 
         </Panel>
       </Collapse>
