@@ -244,7 +244,7 @@ const Main = () => {
           if (response.data.status === "failed") {
             message.error(response.data.message);
           } else {
-            let neww = listTempat.slice();
+            let neww = listTempat?listTempat.slice():[];
             neww.unshift(response.data.data);            
              setListTempat(neww);           
             console.log(response.data.data);
