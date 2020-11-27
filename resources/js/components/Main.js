@@ -226,7 +226,7 @@ const Main = () => {
       bodyFormData.append("id_kota", +values.kota);
       bodyFormData.append("nama_tempat", values.tempat.toLowerCase());
       bodyFormData.append("alamat", values.alamat);
-      bodyFormData.append("biaya", String(values.Budget));
+      bodyFormData.append("biaya", values.Budget);
       bodyFormData.append("hashtag", values.hastag);
       bodyFormData.append("deskripsi",  values.deskripsi);
       bodyFormData.append("id_kategori", values.kategori);
@@ -445,9 +445,8 @@ const Main = () => {
                 rules={[{ required: true, message: 'Biaya kosong' }]}
 
               >
-                <InputNumber min={1000} />
-              </Form.Item>
-              <span className="ant-form-text"> Rupiah</span>
+               <Input.TextArea />
+              </Form.Item>        
             </Form.Item>
 
             <Form.Item
@@ -534,6 +533,7 @@ const Main = () => {
               title="Foto"
               dataIndex="foto"
               key="foto"
+              render={foto=>{return foto&&foto.length>30? foto.split('').slice(0,15).join(''):foto}}
             />
           </Table>:""} 
 
@@ -613,7 +613,7 @@ const Main = () => {
               dataIndex="hashtag"
               key="hashtag"
             />
-            <Column
+            <Column 
               title="Deskripsi"
               dataIndex="deskripsi"
               key="deskripsi"
