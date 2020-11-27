@@ -527,7 +527,7 @@ const Main = () => {
               title="Nama Provinsi"
               dataIndex="provinsi"
               key="provinsi"
-
+  
             />
             <Column
               title="Foto"
