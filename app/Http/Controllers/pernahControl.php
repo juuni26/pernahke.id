@@ -3,22 +3,43 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use DB;
 
 use App\Provinsi;
 use App\Kota;
 use App\Tempat;
 use App\Kategori;
+use App\Session;
 
 class pernahControl extends Controller
 {
+
+    public function respon($status='',$message='',$data='',$token=''){
+        return response()->json([
+            'status'  => $status,
+            'message' => $message,
+            'token'   => $token,
+            'data'    => $data,
+        ]);
+    }
+
     public function insProvinsi(request $req){
 
+        if(!$req->token){
+            $this->respon('failed','Session habis!');
+        } else {
+            $token = Session::update($req->token);
+            if($token == 'no'){
+                $this->respon('failed','Session bermasalah!');
+            } else {
+                
+            }
+
+        }
+
         if(!$req->nama_provinsi){
-            return response()->json([
-                'status'  => 'failed',
-                'message' => 'Provinsi tidak boleh kosong!'
-            ]);
+            $this->respon('failed','Provinsi tidak boleh kosong!');
         } else{
             $provinsi = $req->nama_provinsi;
         }
@@ -32,34 +53,21 @@ class pernahControl extends Controller
 
         $ins = Provinsi::insProvinsi($provinsi,$image);
         if($ins == 'no') {
-            return response()->json([
-                'status'  => 'failed',
-                'message' => 'Gagal memasukkan provinsi!',
-            ]);
+            $this->respon('failed','Gagal memasukkan provinsi!');
         } else {
-            return response()->json([
-                'status'  => 'success',
-                'message' => 'Berhasil memasukkan provinsi!',
-                'data'      => $ins,
-            ]);
+            $this->respon('success','Berhasil memasukkan provinsi!',$ins,$token);
         }
 
     }
 
     public function insKota(request $req){
         if(!$req->id_provinsi){
-            return response()->json([
-                'status'  => 'failed',
-                'message' => 'Provinsi tidak boleh kosong!'
-            ]);
+            $this->respon('success','Provinsi tidak boleh kosong!');
         } else{
             $provinsi = $req->id_provinsi;
         }
         if(!$req->nama_kota){
-            return response()->json([
-                'status'  => 'failed',
-                'message' => 'Kota tidak boleh kosong!'
-            ]);
+            $this->respon('failed','Kota tidak boleh kosong!');
         } else{
             $kota = $req->nama_kota;
         }
@@ -73,42 +81,26 @@ class pernahControl extends Controller
 
         $ins = Kota::insKota($provinsi,$kota,$image);
         if($ins == 'no') {
-            return response()->json([
-                'status'  => 'failed',
-                'message' => 'Gagal memasukkan kota!'
-            ]);
+            $this->respon('failed','Gagal memasukkan kota!');
         } else {
-            return response()->json([
-                'status'  => 'success',
-                'message' => 'Berhasil memasukkan kota!',
-                'data'      => $ins,
-            ]);
+            $this->respon('success','Berhasil memasukkan kota!',$ins);
         }
     }
 
     public function insTempat(request $req){
         if(!$req->id_kota){
-            return response()->json([
-                'status'  => 'failed',
-                'message' => 'Kota tidak boleh kosong!'
-            ]);
+            $this->respon('failed','Kota tidak boleh kosong!');
         } else{
             $kota = $req->id_kota;
         }
         if(!$req->nama_tempat){
-            return response()->json([
-                'status'  => 'failed',
-                'message' => 'Provinsi tidak boleh kosong!'
-            ]);
+            $this->respon('failed','Tempat tidak boleh kosong!');
         } else{
             $tempat = $req->nama_tempat;
         }
 
         if(!$req->alamat){
-            return response()->json([
-                'status'  => 'failed',
-                'message' => 'Alamat tidak boleh kosong!'
-            ]);
+            $this->respon('failed','Alamat tidak boleh kosong!');
         }else{
             $alamat = $req->alamat;
         }
@@ -120,37 +112,25 @@ class pernahControl extends Controller
         } 
 
         if(!$req->biaya){
-            return response()->json([
-                'status'  => 'failed',
-                'message' => 'Biaya tidak boleh kosong!'
-            ]);
+            $this->respon('failed','Biaya tidak boleh kosong!');
         }else{
             $biaya = $req->biaya;
         }
 
         if(!$req->deskripsi){
-            return response()->json([
-                'status'  => 'failed',
-                'message' => 'Deskripsi tidak boleh kosong!'
-            ]);
+            $this->respon('failed','Deskripsi tidak boleh kosong!');
         }else{
             $deskripsi = $req->deskripsi;
         }
 
         if(!$req->hashtag){
-            return response()->json([
-                'status'  => 'failed',
-                'message' => 'Hashtag tidak boleh kosong!'
-            ]);
+            $this->respon('failed','Hashtag tidak boleh kosong!');
         }else{
             $hashtag = $req->hashtag;
         }
 
         if(!$req->id_kategori){
-            return response()->json([
-                'status'  => 'failed',
-                'message' => 'Kategori tidak boleh kosong!'
-            ]);
+            $this->respon('failed','Kategori tidak boleh kosong!');
         }else{
             $kategori = $req->id_kategori;
         }
@@ -158,10 +138,7 @@ class pernahControl extends Controller
 
         $ins = Tempat::insTempat($kota,$tempat,$alamat,$biaya,$deskripsi,$image,$hashtag,$kategori);
         if($ins == 'no') {
-            return response()->json([
-                'status'  => 'failed',
-                'message' => 'Gagal memasukkan tempat!'
-            ]);
+            $this->respon('failed','Gagal memasukkan tempat!');
         } else {
             $data = array(
                 'tempat'        => $ins->tempat,
@@ -175,11 +152,7 @@ class pernahControl extends Controller
                 'kategori'      => $ins->kategoris->pluck('kategori')->toArray() 
             );
             $data = (object) $data;
-            return response()->json([
-                'status'        => 'success',
-                'message'       => 'Berhasil memasukkan tempat!',
-                'data'          => $data
-            ]);
+            $this->respon('success','Berhasil memasukkan tempat!',$data);
         }
 
 
@@ -187,10 +160,7 @@ class pernahControl extends Controller
 
     public function insKategori(request $req){
         if(!$req->kategori){
-            return response()->json([
-                'status'  => 'failed',
-                'message' => 'kategori tidak boleh kosong!'
-            ]);
+            $this->respon('failed','kategori tidak boleh kosong!');
         } else{
             $kategori = $req->kategori;
         }
@@ -198,16 +168,9 @@ class pernahControl extends Controller
 
         $ins = Kategori::insKategori($kategori);
         if($ins == 'no') {
-            return response()->json([
-                'status'  => 'failed',
-                'message' => 'Gagal memasukkan kategori!',
-            ]);
+            $this->respon('failed','Gagal memasukkan kategori!');
         } else {
-            return response()->json([
-                'status'  => 'success',
-                'message' => 'Berhasil memasukkan kategori!',
-                'data'      => $ins,
-            ]);
+            $this->respon('success','Berhasil memasukkan kategori!',$ins);
         }
     }
 
@@ -249,6 +212,37 @@ class pernahControl extends Controller
         return response()->json([
             'data' => $item,
         ]);
+    }
+
+    public function login(request $req){
+        if(!$req->email){
+            $this->respon('failed','Email tidak ditemukan!');
+        } else {
+            $email = $req->email;
+        }
+
+        if(!$req->password){
+            $this->respon('failed','Password tidak boleh kosong!');
+        } else {
+            $password = $req->password;
+        }
+
+        $cek = Orang::where('email',$email)->first();
+        if(!$cek){
+            if(Hash::check($password, $cek->password)){
+                $sess = Session::login($email);
+                if($sess == 'no'){
+                    $this->respon('failed','Gagal memasukkan session!');
+                } else {
+                    $this->respon('success','Login sukses!','',$sess);
+                }
+            } else {
+                $this->respon('failed','Email atau Password salah!');
+            } 
+        } else {
+            $this->respon('failed','Email atau Password salah!');
+        }
+
     }
 
 }
