@@ -21,3 +21,30 @@
         text-align: center;
     }
 }
+
+.containerr {
+    min-height: 95vh;
+    width: 100%;
+}
+
+.layoutt {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.navbarr {
+    width: 100%;
+    height: 10vh;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+footer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
