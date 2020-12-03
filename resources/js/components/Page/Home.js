@@ -109,7 +109,7 @@ const Home = () => {
             </div>
     </div>
 
-    <div class="card">
+    <div class="card" style={}>
         <div class="content">
             <h2 class="title">Aceh</h2>
             {/* <p class="copy">Seriously, straight up, just blast off into outer space today</p><button class="btn">Book Now</button> */}
