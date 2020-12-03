@@ -11,18 +11,31 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {  
+//     return view('welcome');
+// });
 
-Route::get('inputan', function () {
-    return view('inputan');
-});
+// Route::get('{/?}', function () {
+//     return view('inputan');
+// });
+
+Route::get('/{path?}', [
+    'uses' => 'pernahControl@index',
+    'as' => 'react',
+    'where' => ['path' => '.*']
+]);
+
+
+Route::get('tester','pernahControl@tester');
 
 route::post('create/provinsi','pernahControl@insProvinsi');
 route::post('create/kota','pernahControl@insKota');
 route::post('create/tempat','pernahControl@insTempat');
 route::post('create/kategori','pernahControl@insKategori');
+route::post('register','pernahControl@register');
+route::post('login','pernahControl@login');
+route::post('logout','pernahControl@logout');
+
 
 route::get('data/provinsi','pernahControl@getProvinsi');
 route::get('data/kota','pernahControl@getKota');

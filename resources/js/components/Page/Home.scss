@@ -1,8 +1,68 @@
 .homepagee {
     width: 80%;
-    margin:0 10%;
+    margin: 0 10%;
     text-align: center;
 }
 input {
     width: 100%;
 }
+
+.whole-section {
+    margin-top: 2vh;
+    position: relative;
+    width: 100%;
+    height: 70vh;
+    transition: all 2s;
+}
+.section {
+    width: 100%;
+    height: 100%;
+ 
+    background-color: lightcoral;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+    
+    
+    &.active {
+        display:block;
+        animation: come 1s ease-in-out;
+    }
+    .rightDir {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+    }
+    .leftDir{
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+
+    }
+    &.provinsi {
+
+    }
+    &.kota {
+       
+    }
+    &.wisata {
+       
+    }
+}
+
+
+@keyframes come {
+    from {
+    opacity: 0;}
+    to {opacity: 1;}
+  }
+
+  @keyframes out {
+    from {transform: translateX(0);}
+    to {transform: translate(-100%);}
+  }

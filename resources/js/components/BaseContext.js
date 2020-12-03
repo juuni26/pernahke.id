@@ -6,16 +6,20 @@ export const BaseProvider = (props) => {
   const [token, setToken] = useState(
     localStorage.getItem("token") ? localStorage.getItem("token") : ""
   );
-  const [filee, setFilee] = useState("");
-  const [dataa, setDataa] = useState([]);
 
-  const [filterData, setFilterData] = useState(null);
-  const [editState, setEditState] = useState(false);
-
-
-  const [userName, setUserName] = useState(
+  const [user, setUser] = useState(
     localStorage.getItem("user") ? localStorage.getItem("user") : ""
   );
+
+  // const [dataa, setDataa] = useState([]);
+
+  // const [filterData, setFilterData] = useState(null);
+  // const [editState, setEditState] = useState(false);
+
+
+  // const [userName, setUserName] = useState(
+  //   localStorage.getItem("user") ? localStorage.getItem("user") : ""
+  // );
 
   
 //   token admin / token user ?
@@ -23,16 +27,8 @@ export const BaseProvider = (props) => {
   const dataBase = {
     token: token,
     setToken: setToken,
-    filee:filee,
-    setFilee:setFilee,
-    userName:userName,
-    setUserName:setUserName,
-    dataa:dataa,
-    setDataa:setDataa,
-    filterData:filterData,
-    setFilterData:setFilterData,
-    editState : editState,
-    setEditState:setEditState
+    user:user,
+    setUser:setUser
   };
 
   return (

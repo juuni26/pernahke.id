@@ -22,44 +22,66 @@ class Session extends Model
         return $this->belongsTo('App\Orang');
     }
 
-    public static function login($email){
-        $cek = Orang::where('email',$email)->first();
+    public static function register($id){
+        $cek = Orang::find($id);
+        if(!$cek) return 'no';
         $ins = new Session([
             'orangs_id' => $cek->id,
             'token'     => encrypt($cek->id),
-            'waktu'     => Carbon::now(),
+            'waktu'     => null,
         ]);
         $cek = $ins->save();
         if($cek){
-            return $ins->token;
+            return 'yes';
         } else {
             return 'no';
         }
 
     }
 
-    public static function update($token){
-        $token = Session::where('orangs_id',(decrypt($token)))->first();
-        if(!$token) return 'no';
-        $waktu = Carbon::parse($token->waktu);
-        $cek = Session::cek($waktu);
-        if($cek == 'no'){
-            return 'no';
-        } else{
-            $token->token = encrypt($token->orangs_id);
-            $token->save();
-            return $token->token;
-        }
+    public static function login($id){
+        if(!$id) return 'no';
+        $cek = Session::cekToken(encrypt($id));
+        if($cek == 'no') return 'no';
+        $cek = Session::updateToken(encrypt($id));
+        if($cek == 'no') return 'no';
+
+        return encrypt($id);
     }
 
-    public static function cek($waktu){
+    public static function cekToken($token){
+        if(!$token) return 'no';
+        $token = Session::where('orangs_id',(decrypt($token)))->first();
+        if(!$token) return 'no';
+        if(!$token->waktu){
+            $waktu = Carbon::now();
+            $token->waktu = $waktu;
+        } else{
+            $waktu = Carbon::parse($token->waktu);
+        }
         $now = Carbon::now();
         if($waktu->diffInMinutes($now) >= 30){
             return 'no';
         } else {
+            $token->save();
             return 'yes';
         }
     }
+
+    public static function updateToken($token){
+        if(!$token) return 'no';
+        $token = Session::where('orangs_id',(decrypt($token)))->first();
+        if(!$token) return 'no';
+        $token->waktu = Carbon::now();
+        $cek = $token->save();
+        if($cek){
+            return encrypt($token->orangs_id);
+        } else{
+            return 'no';
+        }
+    }
+
+    
 
 
 }

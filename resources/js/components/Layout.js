@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
-import { Layout, Menu } from "antd";
-// import { BaseContext } from "./BaseContext";
+import { Layout, Menu,message } from "antd";
+import { BaseContext } from "./BaseContext";
 import {
     AimOutlined,
     HomeOutlined,
@@ -9,7 +9,8 @@ import {
     CopyrightOutlined
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
-import './App.scss'
+import "./App.scss";
+import Axios from "axios";
 
 // import HeaderLayout from "./UserAccount/Header";
 const { Content, Footer, Sider } = Layout;
@@ -17,20 +18,62 @@ const { SubMenu } = Menu;
 
 const LayoutContent = props => {
     const [collapsed, setCollapsed] = useState(false);
-    //   const { token, user } = useContext(BaseContext);
 
-    //   const onCollapse = () => {
-    //     setCollapsed(!collapsed);
-    //   };
+      const { token,setToken,setUser,user } = useContext(BaseContext);    
 
     return (
         <div className="layoutt">
             <nav className="navbarr">
                 <div className="logo">ini logo</div>
-                <div className="user">user section</div>
-            </nav>
+                <div className="user">
+                    <ul>
+                        {token ? (
+                            <li>
+                                <span style={{cursor:"pointer",color:"green",fontWeight:"700"}}  onClick={() => {
+                                Axios.defaults.xsrfHeaderName = "X-CSRFToken";
+
+                                var bodyFormData = new FormData();
+                                bodyFormData.append("token", token);                                                        
+                                Axios({
+                                    method: "post",
+                                    url: "/logout",
+                                    data: bodyFormData,
+                                    headers: {            
+                                        "X-CSRF-TOKEN": csrf_token
+                                    }
+                                })
+                                    .then(response => {
+                                      console.log(response);
+                                        if (response.data.status === "failed") {
+                                            message.error(response.data.message);
+                                        } else {
+                                            message.success(response.data.message);
+                                            localStorage.clear();
+                                            setToken('');
+                                            setUser('');
+
+                                        }                                       
+                                    })
+                                    .catch(function (response) {
+                                        console.log(response);
+                                    });
+
+
+
+                                }}>Logout</span>
+                            </li>
+                        ) : (
+                            <li>
+                                <Link to="/login">Login</Link>
+                            </li>
+                        )}
+                    </ul>
+                </div>
+            </nav>                        
             <div className="containerr">{props.children}</div>
-            <footer><h5>pernahke @2020</h5></footer>
+            <footer>
+                <h5>pernahke @2020</h5>
+            </footer>
         </div>
         // <Layout style={{ minHeight: "100vh" }}>
         //   <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
