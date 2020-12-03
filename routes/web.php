@@ -22,7 +22,9 @@
 Route::get('/{path?}', [
     'uses' => 'pernahControl@index',
     'as' => 'react',
-    'where' => ['path' => '.*']
+    // 'where' => ['path' => '.*']
+    'where' => ['path' => '^(?!data/).*$']
+
 ]);
 
 
