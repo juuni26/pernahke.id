@@ -10,7 +10,8 @@ import {
     Select,
     InputNumber,
     Table,
-    message
+    message,
+    Skeleton
 } from "antd";
 import {
     MinusCircleOutlined,
@@ -26,27 +27,56 @@ import "./Home.scss";
 
 const Home = () => {
     const [placeholder, setPlaceholder] = useState("");
-    const [slider,setSlider] = useState(1);
-    const [provinsi,setProvinsi] = useState(null);
+    const [slider, setSlider] = useState(1);
+    const [provinsiSlide, setProvinsiSlide] = useState(1);
+    const [provinsi, setProvinsi] = useState(null);
+    const [kota, setKota] = useState(null);
+    const [gerak, setGerak] = useState(null);
 
-   
-    const slideLeft = ()=>{
-        let newSlider=  +slider-1===0 ?3:slider-1;
-        setSlider(newSlider);
+    const slideLeft = () => {
+        // let newSlider = +slider - 1 === 0 ? 3 : slider - 1;
+        // setSlider(newSlider);
+
+        let newSlider =
+            +provinsiSlide - 1 === 0
+                ? Math.ceil(provinsi.length / 10)
+                : provinsiSlide - 1;
+        setProvinsiSlide(newSlider);
     };
 
-    const slideRight = ()=>{
-        let newSlider=  +slider+1===4 ?1:slider+1;
-        setSlider(newSlider);
-    }
-     
+    const slideRight = () => {
+        let newSlider =
+            +provinsiSlide + 1 === Math.ceil(provinsi.length / 10) + 1
+                ? 1
+                : provinsiSlide + 1;
+        setProvinsiSlide(newSlider);
+    };
+
+    const handleToKota = id => {
+        Axios.get(`/data/kota-provinsi/${id}`).then(response => {
+            console.log(response, id, "id");
+            if (response.data.status === "failed") {
+                message.error(response.data.message);
+            } else {
+                setKota(response.data.data);
+                setSlider(2);
+                message.succes;
+            }
+        });
+    };
 
     useEffect(() => {
-
-        Axios.get('/data/provinsi').then(response=>{
-            setProvinsi(response.data.data);            
+        Axios.get("/data/provinsi").then(response => {
+            console.log(provinsi,"1");
+            setProvinsi(response.data.data);
+            console.log(provinsi,"2");
+            console.log(response.data.data.slice(+1 * 10 - 10, +1 * 10));
+            localStorage.setItem("provinsi", "true");
+        }).then(()=>{
+            console.log(provinsi);
         })
 
+    
 
         const txt = "cari tempat yang kamu mau";
         let txtLen = txt.length;
@@ -62,6 +92,8 @@ const Home = () => {
             i++;
         }, 140);
     }, []);
+
+    
 
     return (
         <div className="homepagee">
@@ -79,75 +111,149 @@ const Home = () => {
             </div>
 
             <div className="whole-section">
-            
-                <section className={slider===1?"section provinsi active":"section provinsi"} >
-                    <div className="leftDir" onClick={slideLeft}>                    
-                    <LeftOutlined />
+                <section
+                    className={
+                        slider === 1
+                            ? "section provinsi active"
+                            : "section provinsi"
+                    }
+                >
+                    <div className="leftDir" onClick={slideLeft}>
+                        <LeftOutlined />
                     </div>
-                    <div className="rightDir" onClick={slideRight}><RightOutlined /></div>
+                    <div className="rightDir" onClick={slideRight}>
+                        <RightOutlined />
+                    </div>
                     <h5>Provinsi Section</h5>
+
                     <div className="picture-list">
-                    
-                    <div class="card">
-        <div class="content">
-            <h2 class="title">Aceh</h2>
-            {/* <p class="copy">Seriously, straight up, just blast off into outer space today</p><button class="btn">Book Now</button> */}
-            </div>
-    </div>
+                        {/* 1, 44 */}
 
-    <div class="card">
-        <div class="content">
-            <h2 class="title">Aceh</h2>
-            {/* <p class="copy">Seriously, straight up, just blast off into outer space today</p><button class="btn">Book Now</button> */}
-            </div>
-    </div>
-
-    <div class="card">
-        <div class="content">
-            <h2 class="title">Aceh</h2>
-            {/* <p class="copy">Seriously, straight up, just blast off into outer space today</p><button class="btn">Book Now</button> */}
-            </div>
-    </div>
-
-    <div class="card" style={}>
-        <div class="content">
-            <h2 class="title">Aceh</h2>
-            {/* <p class="copy">Seriously, straight up, just blast off into outer space today</p><button class="btn">Book Now</button> */}
-            </div>
-    </div>
-
-   
-                    
-                    {/* <img src={"https://images.unsplash.com/photo-1469443168033-4623821959af?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1600&q=80"}></img>
-                    <img src={"https://images.unsplash.com/photo-1469443168033-4623821959af?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1600&q=80"}></img>
-                    <img src={"https://images.unsplash.com/photo-1469443168033-4623821959af?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1600&q=80"}></img>
-                    <img src={"https://images.unsplash.com/photo-1469443168033-4623821959af?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1600&q=80"}></img>
-                    
-                    <img src={"https://images.unsplash.com/photo-1469443168033-4623821959af?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1600&q=80"}></img>
-                    <img src={"https://images.unsplash.com/photo-1469443168033-4623821959af?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1600&q=80"}></img>
-                    <img src={"https://images.unsplash.com/photo-1469443168033-4623821959af?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1600&q=80"}></img>
-                    <img src={"https://images.unsplash.com/photo-1469443168033-4623821959af?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1600&q=80"}></img>
-                    
-                    <img src={"https://images.unsplash.com/photo-1469443168033-4623821959af?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1600&q=80"}></img>
-                    <img src={"https://images.unsplash.com/photo-1469443168033-4623821959af?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=1600&q=80"}></img>
-                                         */}
-                    
+                        {provinsi && provinsi.length > 0 ? (
+                            provinsiSlide ===
+                            Math.ceil(provinsi.length / 10) ? (
+                                provinsi
+                                    .slice(
+                                        +provinsiSlide * 10 - 10,
+                                        +provinsi.length
+                                    )
+                                    .map(provinsi => {
+                                        let nama = provinsi.provinsi;
+                                        let url = JSON.parse(provinsi.foto)[0];
+                                        return (
+                                            <div
+                                                className="card"
+                                                onClick={() => {
+                                                    handleToKota(provinsi.id);
+                                                }}
+                                                
+                                            >
+                                                <img
+                                                    className="card-image"
+                                                    src={url}
+                                                    alt={url}
+                                                    
+                                                />
+                                                <div className="content">
+                                                    <h4>{nama}</h4>
+                                                </div>
+                                            </div>
+                                        );
+                                    })
+                            ) : (
+                                Array.from(provinsi)
+                                    .slice(
+                                        +provinsiSlide * 10 - 10,
+                                        +provinsiSlide * 10
+                                    )
+                                    .map(provinsi => {
+                                        let nama = provinsi.provinsi;
+                                        let url = JSON.parse(provinsi.foto)[0];
+                                        return (
+                                            <div
+                                                className="card"
+                                                onClick={() => {
+                                                    handleToKota(provinsi.id);
+                                                }}
+                                            >
+                                                <img
+                                                    className="card-image"
+                                                    src={url}
+                                                    alt={url}
+                                                    onClick={() => {
+                                                        handleToKota(
+                                                            provinsi.id
+                                                        );
+                                                    }}                                                    
+                                                />
+                                                <div className="content">
+                                                    <h4>{nama}</h4>
+                                                </div>
+                                            </div>
+                                        );
+                                    })
+                            )
+                        ) : (
+                            <Skeleton />
+                        )}
                     </div>
                 </section>
 
-                <section className={slider===2?"section kota active":"section kota"}>
-                <div className="leftDir" onClick={slideLeft}>                    
-                    <LeftOutlined />
+                <section
+                    className={
+                        slider === 2 ? "section kota active" : "section kota"
+                    }
+                >
+                    <div className="leftDir" onClick={slideLeft}>
+                        <LeftOutlined />
                     </div>
-                    <div className="rightDir" onClick={slideRight}><RightOutlined /></div>
+                    <div className="rightDir" onClick={slideRight}>
+                        <RightOutlined />
+                    </div>
                     <h5>kota Section</h5>
+
+                    <div className="picture-list">
+                        {kota && kota.length > 0 ? (
+                            kota.map(kota => {
+                                let nama = kota.kota;
+                                let url = JSON.parse(kota.foto)[0];
+                                return (
+                                    <div
+                                        className="card"
+                                        onClick={() => {
+                                            handleToKota(kota.id);
+                                        }}
+                                    >
+                                        <img
+                                            className="card-image"
+                                            src={url}
+                                            alt={url}
+                                        />
+                                        <div className="content">
+                                            <h4>{nama}</h4>
+                                        </div>
+                                    </div>
+                                );
+                            })
+                        ) : (
+                            <Skeleton />
+                        )}
+                    </div>
                 </section>
 
-                <section className={slider===3?"section wisata active":"section wisata"}>
-                <div className="leftDir" onClick={slideLeft}>                    
-                    <LeftOutlined />
+                <section
+                    className={
+                        slider === 3
+                            ? "section wisata active"
+                            : "section wisata"
+                    }
+                >
+                    <div className="leftDir" onClick={slideLeft}>
+                        <LeftOutlined />
                     </div>
-                    <div className="rightDir" onClick={slideRight}><RightOutlined /></div>
+                    <div className="rightDir" onClick={slideRight}>
+                        <RightOutlined />
+                    </div>
                     <h5>Wisata Section</h5>
                 </section>
             </div>

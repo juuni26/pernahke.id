@@ -294,4 +294,39 @@ class pernahControl extends Controller
         }
     }
 
+    public function getKotaP($id){
+        if(!$id) return $this->respon('failed','Provinsi tidak ditemukan!');
+        $kota = Kota::where('provinsis_id',$id)->get();
+        $provinsi = Provinsi::find($id);
+        if($kota->isEmpty()) return $this->respon('failed','Provinsi tidak ditemukan!');
+        return $this->respon('success','Berikut kota yang ada di provinsi '.strtoupper($provinsi),$kota);
+    }
+
+    public function getTempatK($id){
+        if(!$id) return $this->respon('failed','Kota tidak ditemukan!');
+        $tempat = Tempat::where('kotas_id',$id)->get();
+        $kota = Kota::find($id);
+        if($tempat->isEmpty()) return $this->respon('failed','Kota tidak ditemukan!');
+        return $this->respon('success','Berikut tempat yang ada di kota '.strtoupper($kota),$tempat);
+    }
+
+    public function getTempatD($id){
+        if(!$id) return $this->respon('failed','Tempat tidak ditemukan!');
+        $data = Tempat::find($id);
+        if(!$data) return $this->respon('failed','Tempat tidak ditemukan!');
+            $item[]= [
+                'tempat'        => $data->tempat,
+                'alamat'        => $data->alamat,
+                'gmaps'         => $data->gmaps,
+                'foto'          => $data->foto,
+                'biaya'         => $data->biaya,
+                'deskripsi'     => $data->deskripsi,
+                'hashtag'       => $data->hashtag,
+                'kota'          => $data->kotas->kota,
+                'kategori'      => $data->kategoris->pluck('kategori')->toArray() ,
+            ];
+        $this->respon('success','Berikut detail tempat '.strtoupper($data->tempat),$item);
+
+    }
+
 }
