@@ -15,7 +15,7 @@ function App() {
   return (
     <BaseProvider>
       <Router>
-        <Layout>
+        {/* <Layout> */}
           <Routes/>
         {/* <Home/> */}
         </Layout>
