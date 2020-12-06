@@ -39,17 +39,17 @@ class pernahControl extends Controller
 
     public function insProvinsi(request $req){
 
-        if(!$req->token){
-            return $this->respon('failed','Session habis!');
-        } else {
-            $token = Session::update($req->token);
-            if($token == 'no'){
-                return $this->respon('failed','Session bermasalah!');
-            } else {
+        // if(!$req->token){
+        //     return $this->respon('failed','Session habis!');
+        // } else {
+        //     $token = Session::update($req->token);
+        //     if($token == 'no'){
+        //         return $this->respon('failed','Session bermasalah!');
+        //     } else {
                 
-            }
+        //     }
 
-        }
+        // }
 
         if(!$req->nama_provinsi){
             return $this->respon('failed','Provinsi tidak boleh kosong!');
@@ -326,6 +326,24 @@ class pernahControl extends Controller
                 'kategori'      => $data->kategoris->pluck('kategori')->toArray() ,
             ];
         $this->respon('success','Berikut detail tempat '.strtoupper($data->tempat),$item);
+
+    }
+
+    public function getSearch(request $req){
+        
+        $search = $req->search;
+        $explode = explode($search);
+        if($search){
+            foreach($explode as $d){
+                $kata = '%'.$d.'%';
+                $item = Tempat::where('hashtag','like',$kata)->get();
+                $item = $item->merge($item);
+            }
+        } else {
+            $item = Tempat::all();
+        }
+
+        return $this->respon('success','',$item);
 
     }
 

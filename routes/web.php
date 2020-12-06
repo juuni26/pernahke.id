@@ -46,4 +46,4 @@ route::get('data/kategori','pernahControl@getKategori');
 route::get('/data/kota-provinsi/{id}','pernahControl@getKotaP');
 route::get('/data/kota-tempat/{id}','pernahControl@getTempatK');
 route::get('/data/tempat-detail/{id}','pernahControl@getTempatD');
-
+route::get('search','pernahControl@getSearch');
