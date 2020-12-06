@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { Layout, Menu,message } from "antd";
+import { Layout, Menu,message,Button } from "antd";
 import { BaseContext } from "./BaseContext";
 import {
     AimOutlined,
@@ -24,8 +24,14 @@ const LayoutContent = props => {
     return (
         <div className="layoutt">
             <nav className="navbarr">
-                <div className="logo">ini logo</div>
-                <div className="user">
+                <div className="logo">
+                <img src="https://www.onlinelogomaker.com/blog/wp-content/uploads/2017/09/travel-logo-design.jpg"/>
+                <div className="logo-text">
+                <h3><span>Indonesia</span>Travel Companion</h3>
+                <p>referensi liburan indonesia</p>
+                </div>
+                </div>
+                <div className="userr">
                     <ul>
                         {token ? (
                             <li>
@@ -64,7 +70,7 @@ const LayoutContent = props => {
                             </li>
                         ) : (
                             <li>
-                                <Link to="/login">Login</Link>
+                                <Link to="/login"><Button primary>Login</Button></Link>
                             </li>
                         )}
                     </ul>

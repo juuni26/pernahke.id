@@ -1,4 +1,4 @@
-import React, { useContext, useLayoutEffect, useState, useEffect } from "react";
+import React, { useContext, useLayoutEffect, useState, useEffect, useRef } from "react";
 
 import {
     Form,
@@ -17,6 +17,9 @@ import {
     MinusCircleOutlined,
     PlusOutlined,
     CaretRightOutlined,
+    SearchOutlined
+    ,
+    ArrowDownOutlined,
     LeftOutlined,
     RightOutlined
 } from "@ant-design/icons";
@@ -26,6 +29,10 @@ import Axios from "axios";
 import "./Home.scss";
 
 const Home = () => {
+    const myRef = useRef(null);
+    const executeScroll = () => myRef.current.scrollIntoView()   
+
+
     const [placeholder, setPlaceholder] = useState("");
     const [slider, setSlider] = useState(1);
     const [provinsiSlide, setProvinsiSlide] = useState(1);
@@ -67,22 +74,22 @@ const Home = () => {
 
     useEffect(() => {
         Axios.get("/data/provinsi").then(response => {
-            console.log(provinsi,"1");
+            console.log(provinsi, "1");
             setProvinsi(response.data.data);
-            console.log(provinsi,"2");
+            console.log(provinsi, "2");
             console.log(response.data.data.slice(+1 * 10 - 10, +1 * 10));
             localStorage.setItem("provinsi", "true");
-        }).then(()=>{
+        }).then(() => {
             console.log(provinsi);
         })
 
-    
+
 
         const txt = "cari tempat yang kamu mau";
         let txtLen = txt.length;
         setPlaceholder("|");
         let i = 0;
-        let itt = setInterval(function() {
+        let itt = setInterval(function () {
             if (+i == txtLen) {
                 setPlaceholder(txt);
                 clearTimeout(itt);
@@ -93,24 +100,28 @@ const Home = () => {
         }, 140);
     }, []);
 
-    
+
 
     return (
         <div className="homepagee">
-            <h1>Indonesia Travel Companion</h1>
-            <p>
-                Mau liburan ?<br />
-                Butuh Referensi?
-            </p>
-            <div>
-                <p>Lihat kata mereka yang pernah ke </p>
-                <form>
-                    <input type="text" name="name" placeholder={placeholder} />
-                    <input type="submit" value="Submit" />
-                </form>
-            </div>
+            <div className="search-section">
+                <div className="main-search">
+                    <h5>Lihat kata mereka yang pernah ke ... </h5>
+                    <form>
+                        <input type="text" name="name" placeholder={placeholder} /><span className="samping-input"><SearchOutlined /></span>
+                        {/* <input type="submit" value="Submit" /> */}
+                    </form>
+                </div>
 
-            <div className="whole-section">
+                <div className="btmm1">
+                    Bingung? ayo eksplore Indonesia !
+</div>
+
+                <div class="arrow bounce btmm" onClick={executeScroll}>
+                    <span><ArrowDownOutlined /></span>
+                </div>
+            </div>
+            <div className="whole-section" ref={myRef}>
                 <section
                     className={
                         slider === 1
@@ -131,71 +142,71 @@ const Home = () => {
 
                         {provinsi && provinsi.length > 0 ? (
                             provinsiSlide ===
-                            Math.ceil(provinsi.length / 10) ? (
-                                provinsi
-                                    .slice(
-                                        +provinsiSlide * 10 - 10,
-                                        +provinsi.length
-                                    )
-                                    .map(provinsi => {
-                                        let nama = provinsi.provinsi;
-                                        let url = JSON.parse(provinsi.foto)[0];
-                                        return (
-                                            <div
-                                                className="card"
-                                                onClick={() => {
-                                                    handleToKota(provinsi.id);
-                                                }}
-                                                
-                                            >
-                                                <img
-                                                    className="card-image"
-                                                    src={url}
-                                                    alt={url}
-                                                    
-                                                />
-                                                <div className="content">
-                                                    <h4>{nama}</h4>
-                                                </div>
-                                            </div>
-                                        );
-                                    })
-                            ) : (
-                                Array.from(provinsi)
-                                    .slice(
-                                        +provinsiSlide * 10 - 10,
-                                        +provinsiSlide * 10
-                                    )
-                                    .map(provinsi => {
-                                        let nama = provinsi.provinsi;
-                                        let url = JSON.parse(provinsi.foto)[0];
-                                        return (
-                                            <div
-                                                className="card"
-                                                onClick={() => {
-                                                    handleToKota(provinsi.id);
-                                                }}
-                                            >
-                                                <img
-                                                    className="card-image"
-                                                    src={url}
-                                                    alt={url}
+                                Math.ceil(provinsi.length / 10) ? (
+                                    provinsi
+                                        .slice(
+                                            +provinsiSlide * 10 - 10,
+                                            +provinsi.length
+                                        )
+                                        .map(provinsi => {
+                                            let nama = provinsi.provinsi;
+                                            let url = JSON.parse(provinsi.foto)[0];
+                                            return (
+                                                <div
+                                                    className="card"
                                                     onClick={() => {
-                                                        handleToKota(
-                                                            provinsi.id
-                                                        );
-                                                    }}                                                    
-                                                />
-                                                <div className="content">
-                                                    <h4>{nama}</h4>
+                                                        handleToKota(provinsi.id);
+                                                    }}
+
+                                                >
+                                                    <img
+                                                        className="card-image"
+                                                        src={url}
+                                                        alt={url}
+
+                                                    />
+                                                    <div className="content">
+                                                        <h4>{nama}</h4>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        );
-                                    })
-                            )
+                                            );
+                                        })
+                                ) : (
+                                    Array.from(provinsi)
+                                        .slice(
+                                            +provinsiSlide * 10 - 10,
+                                            +provinsiSlide * 10
+                                        )
+                                        .map(provinsi => {
+                                            let nama = provinsi.provinsi;
+                                            let url = JSON.parse(provinsi.foto)[0];
+                                            return (
+                                                <div
+                                                    className="card"
+                                                    onClick={() => {
+                                                        handleToKota(provinsi.id);
+                                                    }}
+                                                >
+                                                    <img
+                                                        className="card-image"
+                                                        src={url}
+                                                        alt={url}
+                                                        onClick={() => {
+                                                            handleToKota(
+                                                                provinsi.id
+                                                            );
+                                                        }}
+                                                    />
+                                                    <div className="content">
+                                                        <h4>{nama}</h4>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })
+                                )
                         ) : (
-                            <Skeleton />
-                        )}
+                                <Skeleton />
+                            )}
                     </div>
                 </section>
 
@@ -236,8 +247,8 @@ const Home = () => {
                                 );
                             })
                         ) : (
-                            <Skeleton />
-                        )}
+                                <Skeleton />
+                            )}
                     </div>
                 </section>
 
