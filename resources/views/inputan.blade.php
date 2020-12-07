@@ -7,7 +7,10 @@
     <title>Pernahke | Inputan Travel City</title>
 </head>
 <body>
-    <div id="app"></div>
+    <div id="app" >
+        
+
+    </div>
 </body>
 
 <script>
