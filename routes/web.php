@@ -15,6 +15,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+route::view('halbaru','app1');
+
 Route::get('inputan', function () {
     return view('inputan');
 });
