@@ -15,13 +15,6 @@
 //     return view('welcome');
 // });
 
-<<<<<<< HEAD
-route::view('halbaru','app1');
-
-Route::get('inputan', function () {
-    return view('inputan');
-});
-=======
 // Route::get('{/?}', function () {
 //     return view('inputan');
 // });
@@ -31,12 +24,10 @@ Route::get('/{path?}', [
     'as' => 'react',
     // 'where' => ['path' => '.*']
     'where' => ['path' => '^(?!data/).*$']
-
 ]);
 
 
 Route::get('tester','pernahControl@tester');
->>>>>>> 8e45fc0fbaaddefbf1baddeeb6953d8b2b403cb9
 
 route::post('create/provinsi','pernahControl@insProvinsi');
 route::post('create/kota','pernahControl@insKota');

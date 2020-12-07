@@ -10,6 +10,52 @@ input {
     width: 100%;
 }
 
+.search-result {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, .2);
+    left: 0;
+    top: 0;
+    z-index: 2;
+}
+
+.search-result-list{
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    height: 90%;
+    margin:10% 10% 0;
+    background-color: rgba(255, 255, 255, 0.9);
+// overflow-y: scroll;
+}
+.single-result {
+    height: 25vh;
+    padding: 3vh 2vw .5vh;    
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    h6 {
+        font-size: 1.4rem;
+    }
+}
+.single-result-content {
+    display: flex;
+    img {
+        
+        border-radius: 10rem;
+        margin-right: 2%;
+        height: 15vh;
+    }
+}
+
+.see-more {
+    cursor: pointer;
+    color: green;
+}
+
+
+
 .search-section {
     padding: 0 10%;
     height: 80vh;
