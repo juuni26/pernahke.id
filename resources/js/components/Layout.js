@@ -14,6 +14,7 @@ import {
 import { Link } from "react-router-dom";
 import "./App.scss";
 import Axios from "axios";
+import Logo from './pernahke.png'
 
 // import HeaderLayout from "./UserAccount/Header";
 const { Content, Footer, Sider } = Layout;
@@ -29,7 +30,7 @@ const LayoutContent = props => {
             <nav className="navbarr">
                 <div className="logo">
                     <Link to="/">
-                        <img src="https://www.onlinelogomaker.com/blog/wp-content/uploads/2017/09/travel-logo-design.jpg" />
+                        <img src={Logo} />
                     </Link>
                     <div className="logo-text">
                         <h3>

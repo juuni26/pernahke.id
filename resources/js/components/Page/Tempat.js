@@ -32,8 +32,9 @@ const Tempat = () => {
                 </div>
 
                 <div className="tempat-like">
-                    <div className="like"><Rate count={1} character={<HeartOutlined />}  /></div>
-                    <div className="desc">Like jika kalian PengenKe   1000 orang  PengenKe sini</div>
+                    <div className="like"><Rate count={1} character={<HeartOutlined />}/                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       ></div>
+                    <div className="desc">Like jika kalian PengenKe <br/>
+                        1000 orang  PengenKe sini</div>
                     <div className="rating"><Rate allowHalf defaultValue={2.5} /> </div>
                 </div>
                 <p>alamat</p>
