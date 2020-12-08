@@ -5,17 +5,119 @@ $bp-lg: 800px;
     width: 100%;
     // margin: 0 10%;
     text-align: center;
+    scroll-behavior: smooth;
 }
 input {
     width: 100%;
 }
 
+.search-result {
+    position: fixed;
+    
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, .2);
+    left: 0;
+    top: 0;
+    z-index: 2;
+    .top-leftt {
+        cursor: pointer;
+        position: absolute;
+        right: 3%;
+        top: 2vh;
+        // width: 4rem;
+        font-size: 3rem;    
+        color: white;
+    }
+}
+
+.search-result-list{
+    border-top-left-radius: 3rem;
+    border-top-right-radius: 3rem;
+
+    z-index: 4;
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    height: 90%;
+    margin:10% 10% 0;
+    background-color: rgba(255, 255, 255, 0.9);
+   
+
+    .leftt {
+        position: absolute;
+        left: 18%;
+        bottom: 1vh;
+        cursor: pointer;
+        &:hover {
+            color: green;
+        }
+    }
+    .middlee {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 1vh;       
+
+    }
+    .rightt {
+        position: absolute;
+        right: 18%;
+        bottom: 1vh;
+        cursor: pointer;
+        &:hover {
+            color: green;
+        }
+
+
+    }
+
+
+   
+// overflow-y: scroll;
+}
+.single-result {
+    height: 25vh;
+    padding: 3vh 2vw .5vh;    
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    
+    h6 {
+        font-size: 1.4rem;
+        cursor: pointer;
+    }
+}
+.single-result-content {
+    display: flex;
+    img {
+        
+        border-radius: 10rem;
+        margin-right: 2%;
+        height: 15vh;
+    }
+}
+
+.see-more {
+    cursor: pointer;
+    color: green;
+}
+
+
+
+
 .search-section {
     padding: 0 10%;
     height: 80vh;
-    // background: url('https://images.unsplash.com/photo-1501963589393-2e1552dfa94a?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
-  background-color: rgba(11, 8, 184, 0.384);
-    background-position: center;
+    background-image: linear-gradient(
+        to right bottom,
+        rgba(71, 75, 112, 0.5),
+        rgba(40, 53, 82, 0.5)
+      ),
+      url("https://images.unsplash.com/photo-1476158085676-e67f57ed9ed7?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1052&q=80");
+
+//   background: url("https://images.unsplash.com/photo-1476158085676-e67f57ed9ed7?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1052&q=80"),linear-gradient(to left, #ff0000 50%, #0000ff 50%);
+  background-position: center;
     background-size: cover;
 
     .main-search{
@@ -33,6 +135,8 @@ input {
             
         }
         .samping-input{
+            outline: none;
+            background-color: #fff;
             padding: 1rem;
             cursor: pointer;
             border: 1px solid black;
@@ -52,7 +156,7 @@ input {
         h5 {
             font-size: 2.5rem;
             text-align: left;
-            color: rgb(238, 171, 171);
+            color: #fff;
         }
 
     }
@@ -65,6 +169,7 @@ input {
         width: 100%;
         text-align: center;
         font-size: 1.2rem;
+        color: #fff;
     }
     .btmm {
         position: absolute;
@@ -99,14 +204,18 @@ input {
     margin-top: 2vh;
     position: relative;
     width: 100%;
-    height: 80vh;
+    height: 90vh;
     transition: all 2s;
+    overflow-y:scroll;
 }
+
+
+
 .section {
     width: 100%;
     height: auto;
 
-    background-color: rgb(22, 177, 138);
+    // background-color: rgb(22, 177, 138);
     position: absolute;
     top: 0;
     left: 0;
@@ -138,11 +247,30 @@ input {
     }
 }
 
+.provinsi  {
+    // color: ;
+    padding: 5vh 10vw;
+    .area-title{
+        font-size:1.3rem ;
+    }
+}
+
+// .picture-list {
+//     display: grid;
+//     width: 60%;
+//     padding: 0 1rem;
+//     grid-template-columns: repeat(5, auto);
+//     gap: 1rem;
+    
+// }
+
 .picture-list {
-    display: grid;
-    padding: 0 1rem;
-    grid-template-columns: repeat(5, auto);
-    gap: 1rem;
+    
+    padding: 1rem;    
+    width: 100%;
+    margin: 0 auto;
+    font-family: var(--font-sans);
+
     img {
         width: 100%;
         &:hover {
@@ -150,18 +278,6 @@ input {
         }
         cursor: pointer;
     }
-}
-
-.picture-list {
-    
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 1rem;
-    
-    width: 100%;
-    margin: 0 auto;
-    font-family: var(--font-sans);
 
     @media (min-width: $bp-md) {
         display: grid;
@@ -175,21 +291,45 @@ input {
 }
 
 .card {
-    width: 100%;
+    max-width: 15rem;
+    margin: auto;   
+    margin-bottom: 1vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     position: relative;
 
-    height: 35vh;
+    height: 25vh;
     justify-content: center;
     transform: translateY(0);
     overflow: hidden;
 
+    @media (min-width: $bp-md) {
+        margin: initial         ;   
+    }
+
+
     .content {
         transform: translateY(100%);
-        opacity: 0;
-
+        opacity: 1;
+        background-color: rgba(10, 1, 48, 0.473);
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: translate(0);
+        width: 100%;
+        height: 100%;           
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        h4 {
+            
+            color: #fff;
+            font-size: 1rem;
+            text-transform: uppercase;
+        }
     }
     .card-image {
         position: absolute;
@@ -201,22 +341,13 @@ input {
     }
 
     &:hover .content {
-        opacity: 1;
+        opacity: 0;
 
         transition: all 0.4s ease-in-out ;
         // transform: translateY(-100%);
-        position: absolute;
-        top: 0;
-        left: 0;
-        transform: translate(0);
-        width: 100%;
-        height: 100%;                  
-        background-color: rgba(0,0,0,.1);
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
+            
+     
+        
     }
 
     &:hover .card-image {

@@ -1,4 +1,10 @@
-import React, { useContext, useLayoutEffect, useState, useEffect, useRef } from "react";
+import React, {
+    useContext,
+    useLayoutEffect,
+    useState,
+    useEffect,
+    useRef
+} from "react";
 
 import {
     Form,
@@ -17,8 +23,10 @@ import {
     MinusCircleOutlined,
     PlusOutlined,
     CaretRightOutlined,
-    SearchOutlined
-    ,
+    CloseOutlined,
+    ArrowRightOutlined,
+    ArrowLeftOutlined,
+    SearchOutlined,
     ArrowDownOutlined,
     LeftOutlined,
     RightOutlined
@@ -30,8 +38,7 @@ import "./Home.scss";
 
 const Home = () => {
     const myRef = useRef(null);
-    const executeScroll = () => myRef.current.scrollIntoView()   
-
+    const executeScroll = () => myRef.current.scrollIntoView();
 
     const [placeholder, setPlaceholder] = useState("");
     const [slider, setSlider] = useState(1);
@@ -39,6 +46,7 @@ const Home = () => {
     const [provinsi, setProvinsi] = useState(null);
     const [kota, setKota] = useState(null);
     const [gerak, setGerak] = useState(null);
+    const [searchState,setSearchState] = useState(null);
 
     const slideLeft = () => {
         // let newSlider = +slider - 1 === 0 ? 3 : slider - 1;
@@ -59,9 +67,13 @@ const Home = () => {
         setProvinsiSlide(newSlider);
     };
 
+    const handleSearch = e =>{
+        e.preventDefault();
+        setSearchState(true);
+    }
+
     const handleToKota = id => {
-        Axios.get(`/data/kota-provinsi/${id}`).then(response => {
-            console.log(response, id, "id");
+        Axios.get(`/data/kota-provinsi/${id}`).then(response => {        
             if (response.data.status === "failed") {
                 message.error(response.data.message);
             } else {
@@ -73,23 +85,18 @@ const Home = () => {
     };
 
     useEffect(() => {
-        Axios.get("/data/provinsi").then(response => {
-            console.log(provinsi, "1");
-            setProvinsi(response.data.data);
-            console.log(provinsi, "2");
-            console.log(response.data.data.slice(+1 * 10 - 10, +1 * 10));
-            localStorage.setItem("provinsi", "true");
-        }).then(() => {
-            console.log(provinsi);
-        })
+        Axios.get("/data/provinsi")
+            .then(response => {
+                setProvinsi(response.data.data);
+                localStorage.setItem("provinsi", "true");
+            })
+            .then(() => {});
 
-
-
-        const txt = "cari tempat yang kamu mau";
+        const txt = "Cari tempat yang kamu mau ...";
         let txtLen = txt.length;
         setPlaceholder("|");
         let i = 0;
-        let itt = setInterval(function () {
+        let itt = setInterval(function() {
             if (+i == txtLen) {
                 setPlaceholder(txt);
                 clearTimeout(itt);
@@ -100,28 +107,90 @@ const Home = () => {
         }, 140);
     }, []);
 
-
-
     return (
         <div className="homepagee">
+            <div className="search-result" style={searchState? {display: "block"}:{display: "none"} } >
+                <div className="top-leftt"onClick={()=>{setSearchState(null)}}>
+                <CloseOutlined />
+                </div>
+                <section className="search-result-list">
+                    <div className="single-result">
+                        <h6>Ancol, Jakarta utara</h6>
+                        <div className="single-result-content">
+                            <img src="https://images.bisnis-cdn.com/posts/2020/06/30/1259392/bio-ancol-3.jpg" />
+                            <p>
+                                loremi ipsffafu afafkfkfkefkof efoekfoefkoefksa
+                                fkfa loremi ipsffafu afafkfkfkefkof
+                                efoekfoefkoefksa fkfa loremi ipsffafu
+                                afafkfkfkefkof efoekfoefkoefksa fkfa ...{" "}
+                                <span className="see-more">See more</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="single-result">
+                        <h6>Ancol, Jakarta utara</h6>
+                        <div className="single-result-content">
+                            <img src="https://images.bisnis-cdn.com/posts/2020/06/30/1259392/bio-ancol-3.jpg" />
+                            <p>
+                                loremi ipsffafu afafkfkfkefkof efoekfoefkoefksa
+                                fkfa loremi ipsffafu afafkfkfkefkof
+                                efoekfoefkoefksa fkfa loremi ipsffafu
+                                afafkfkfkefkof efoekfoefkoefksa fkfa ...{" "}
+                                <span className="see-more">See more</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="single-result">
+                        <h6>Ancol, Jakarta utara</h6>
+                        <div className="single-result-content">
+                            <img src="https://images.bisnis-cdn.com/posts/2020/06/30/1259392/bio-ancol-3.jpg" />
+                            <p>
+                                loremi ipsffafu afafkfkfkefkof efoekfoefkoefksa
+                                fkfa loremi ipsffafu afafkfkfkefkof
+                                efoekfoefkoefksa fkfa loremi ipsffafu
+                                afafkfkfkefkof efoekfoefkoefksa fkfa ...{" "}
+                                <span className="see-more">See more</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="leftt"><ArrowLeftOutlined /> Sebelumnya</div>
+                    <div className="middlee">Halaman 1</div>
+                    <div className="rightt">Selanjutnya <ArrowRightOutlined /></div>
+                </section>
+            </div>
+
             <div className="search-section">
                 <div className="main-search">
                     <h5>Lihat kata mereka yang pernah ke ... </h5>
-                    <form>
-                        <input type="text" name="name" placeholder={placeholder} /><span className="samping-input"><SearchOutlined /></span>
-                        {/* <input type="submit" value="Submit" /> */}
+                    <form onSubmit={handleSearch}>
+                        <input
+                            type="text"
+                            name="name"
+                            placeholder={placeholder}
+                            list="data"
+                        />
+                        <button className="samping-input">
+                            <SearchOutlined />
+                        </button>
+                        <datalist id="data">
+                            <option value="test ">test</option>
+                        </datalist>
                     </form>
                 </div>
 
-                <div className="btmm1">
-                    Bingung? ayo eksplore Indonesia !
-</div>
+                <div className="btmm1">Bingung? Ayo explore Indonesia !</div>
 
-                <div class="arrow bounce btmm" onClick={executeScroll}>
-                    <span><ArrowDownOutlined /></span>
+                <div className="arrow bounce btmm" onClick={executeScroll}>
+                    <span>
+                        <ArrowDownOutlined style={{color:"#fff"}} />
+                    </span>
                 </div>
             </div>
-            <div className="whole-section" ref={myRef}>
+
+            <div className="whole-section" >
                 <section
                     className={
                         slider === 1
@@ -135,78 +204,74 @@ const Home = () => {
                     <div className="rightDir" onClick={slideRight}>
                         <RightOutlined />
                     </div>
-                    <h5>Provinsi Section</h5>
+                    <h5 className="area-title" ref={myRef}>Provinsi Section</h5>
 
                     <div className="picture-list">
-                        {/* 1, 44 */}
-
                         {provinsi && provinsi.length > 0 ? (
                             provinsiSlide ===
-                                Math.ceil(provinsi.length / 10) ? (
-                                    provinsi
-                                        .slice(
-                                            +provinsiSlide * 10 - 10,
-                                            +provinsi.length
-                                        )
-                                        .map(provinsi => {
-                                            let nama = provinsi.provinsi;
-                                            let url = JSON.parse(provinsi.foto)[0];
-                                            return (
-                                                <div
-                                                    className="card"
-                                                    onClick={() => {
-                                                        handleToKota(provinsi.id);
-                                                    }}
-
-                                                >
-                                                    <img
-                                                        className="card-image"
-                                                        src={url}
-                                                        alt={url}
-
-                                                    />
-                                                    <div className="content">
-                                                        <h4>{nama}</h4>
-                                                    </div>
+                            Math.ceil(provinsi.length / 10) ? (
+                                provinsi
+                                    .slice(
+                                        +provinsiSlide * 10 - 10,
+                                        +provinsi.length
+                                    )
+                                    .map(provinsi => {
+                                        let nama = provinsi.provinsi;
+                                        let url = JSON.parse(provinsi.foto)[0];
+                                        return (
+                                            <div
+                                                className="card"
+                                                onClick={() => {
+                                                    handleToKota(provinsi.id);
+                                                }}
+                                            >
+                                                <img
+                                                    className="card-image"
+                                                    src={url}
+                                                    alt={url}
+                                                />
+                                                <div className="content">
+                                                    <h4>{nama}</h4>
                                                 </div>
-                                            );
-                                        })
-                                ) : (
-                                    Array.from(provinsi)
-                                        .slice(
-                                            +provinsiSlide * 10 - 10,
-                                            +provinsiSlide * 10
-                                        )
-                                        .map(provinsi => {
-                                            let nama = provinsi.provinsi;
-                                            let url = JSON.parse(provinsi.foto)[0];
-                                            return (
-                                                <div
-                                                    className="card"
+                                            </div>
+                                        );
+                                    })
+                            ) : (
+                                provinsi
+                                    .slice(
+                                        +provinsiSlide * 10 - 10,
+                                        +provinsiSlide * 10
+                                    )
+                                    .map(provinsi => {
+                                        let nama = provinsi.provinsi;
+                                        let url = JSON.parse(provinsi.foto)[0];
+                                        return (
+                                            <div
+                                                className="card"
+                                                onClick={() => {
+                                                    handleToKota(provinsi.id);
+                                                }}
+                                            >
+                                                <img
+                                                    className="card-image"
+                                                    src={url}
+                                                    alt={url}
                                                     onClick={() => {
-                                                        handleToKota(provinsi.id);
+                                                        handleToKota(
+                                                            provinsi.id
+                                                        );
                                                     }}
-                                                >
-                                                    <img
-                                                        className="card-image"
-                                                        src={url}
-                                                        alt={url}
-                                                        onClick={() => {
-                                                            handleToKota(
-                                                                provinsi.id
-                                                            );
-                                                        }}
-                                                    />
-                                                    <div className="content">
-                                                        <h4>{nama}</h4>
-                                                    </div>
+                                                />
+                                                <div className="content">
+                                                    <h4>{nama}</h4>
                                                 </div>
-                                            );
-                                        })
-                                )
+                                            </div>
+                                        );
+                                    })
+                            )
                         ) : (
-                                <Skeleton />
-                            )}
+                            <Skeleton />
+                        )}
                     </div>
                 </section>
 
@@ -247,8 +312,8 @@ const Home = () => {
                                 );
                             })
                         ) : (
-                                <Skeleton />
-                            )}
+                            <Skeleton />
+                        )}
                     </div>
                 </section>
 

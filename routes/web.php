@@ -15,11 +15,19 @@
 //     return view('welcome');
 // });
 
-route::view('halbaru','app1');
+// Route::get('{/?}', function () {
+//     return view('inputan');
+// });
 
-Route::get('inputan', function () {
-    return view('inputan');
-});
+Route::get('/{path?}', [
+    'uses' => 'pernahControl@index',
+    'as' => 'react',
+    // 'where' => ['path' => '.*']
+    'where' => ['path' => '^(?!data/).*$']
+]);
+
+
+Route::get('tester','pernahControl@tester');
 
 route::post('create/provinsi','pernahControl@insProvinsi');
 route::post('create/kota','pernahControl@insKota');

@@ -2,7 +2,10 @@ import React, { useContext, useLayoutEffect } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 
 import Home from "./Page/Home";
-// import Inputan from "./Main";
+// import Inputan from "./Main"
+
+import Tempat from "./Page/Tempat";
+
 
 import Login from "./User/Login";
 import Register from "./User/Register";
@@ -37,6 +40,9 @@ const Routes = () => {
             </Route>
             <Route exact path="/login">
                 <Login />
+            </Route>
+            <Route exact path="/tempat/:id">
+                <Tempat />
             </Route>
             <Route exact path="/register">
                 <Register />
