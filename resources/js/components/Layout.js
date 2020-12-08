@@ -1,12 +1,15 @@
 import React, { useState, useContext } from "react";
-import { Layout, Menu,message,Button } from "antd";
+import { Layout, Menu, message, Button } from "antd";
 import { BaseContext } from "./BaseContext";
 import {
     AimOutlined,
     HomeOutlined,
     CaretRightOutlined,
     GithubOutlined,
-    CopyrightOutlined
+    CopyrightOutlined,
+    MailOutlined,
+    InstagramOutlined,
+    WhatsAppOutlined
 } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import "./App.scss";
@@ -19,66 +22,102 @@ const { SubMenu } = Menu;
 const LayoutContent = props => {
     const [collapsed, setCollapsed] = useState(false);
 
-      const { token,setToken,setUser,user } = useContext(BaseContext);    
+    const { token, setToken, setUser, user } = useContext(BaseContext);
 
     return (
         <div className="layoutt">
             <nav className="navbarr">
                 <div className="logo">
-                <img src="https://www.onlinelogomaker.com/blog/wp-content/uploads/2017/09/travel-logo-design.jpg"/>
-                <div className="logo-text">
-                <h3><span>Indonesia</span>Travel Companion</h3>
-                <p>referensi liburan indonesia</p>
-                </div>
+                    <Link to="/">
+                        <img src="https://www.onlinelogomaker.com/blog/wp-content/uploads/2017/09/travel-logo-design.jpg" />
+                    </Link>
+                    <div className="logo-text">
+                        <h3>
+                            <span>Indonesia</span>Travel Companion
+                        </h3>
+                        <p>referensi liburan indonesia</p>
+                    </div>
                 </div>
                 <div className="userr">
                     <ul>
                         {token ? (
                             <li>
-                                <span style={{cursor:"pointer",color:"green",fontWeight:"700"}}  onClick={() => {
-                                Axios.defaults.xsrfHeaderName = "X-CSRFToken";
+                                <Button
+                                    primary
+                                    style={{backgroundColor:"#32324e",color:"#fff",textTransform:"uppercase",fontStyle:"italic"}}
+                                    onClick={() => {
+                                        Axios.defaults.xsrfHeaderName =
+                                            "X-CSRFToken";
 
-                                var bodyFormData = new FormData();
-                                bodyFormData.append("token", token);                                                        
-                                Axios({
-                                    method: "post",
-                                    url: "/logout",
-                                    data: bodyFormData,
-                                    headers: {            
-                                        "X-CSRF-TOKEN": csrf_token
-                                    }
-                                })
-                                    .then(response => {
-                                      console.log(response);
-                                        if (response.data.status === "failed") {
-                                            message.error(response.data.message);
-                                        } else {
-                                            message.success(response.data.message);
-                                            localStorage.clear();
-                                            setToken('');
-                                            setUser('');
-
-                                        }                                       
-                                    })
-                                    .catch(function (response) {
-                                        console.log(response);
-                                    });
-
-
-
-                                }}>Logout</span>
+                                        var bodyFormData = new FormData();
+                                        bodyFormData.append("token", token);
+                                        Axios({
+                                            method: "post",
+                                            url: "/logout",
+                                            data: bodyFormData,
+                                            headers: {
+                                                "X-CSRF-TOKEN": csrf_token
+                                            }
+                                        })
+                                            .then(response => {
+                                                console.log(response);
+                                                if (
+                                                    response.data.status ===
+                                                    "failed"
+                                                ) {
+                                                    message.error(
+                                                        response.data.message
+                                                    );
+                                                } else {
+                                                    message.success(
+                                                        response.data.message
+                                                    );
+                                                    localStorage.clear();
+                                                    setToken("");
+                                                    setUser("");
+                                                }
+                                            })
+                                            .catch(function(response) {
+                                                console.log(response);
+                                            });
+                                    }}
+                                >
+                                    Logout
+                                </Button>
                             </li>
                         ) : (
                             <li>
-                                <Link to="/login"><Button primary>Login</Button></Link>
+                                <Link to="/login">
+                                    <Button primary  style={{backgroundColor:"#32324e",color:"#fff",textTransform:"uppercase",fontStyle:"italic"}}>Login</Button>
+                                </Link>
                             </li>
                         )}
                     </ul>
                 </div>
-            </nav>                        
+            </nav>
             <div className="containerr">{props.children}</div>
             <footer>
-                <h5>pernahke @2020</h5>
+                <div className="footer">
+                    <div className="footer-section">
+                        <p className="footer-title">Kontak kami</p>
+                        <p className="footer-icon">
+                            <a href="mailto:hwijaya91@gmail.com"><MailOutlined /> hwijaya91@gmail.com</a>
+                        </p>
+                        <p className="footer-icon">
+                            <a href="mailto:junio.akarda26@gmail.com"><MailOutlined /> junio.akarda26@gmail.com</a>
+                        </p>
+                    </div>
+                    <div className="footer-section">
+                        <p className="footer-title">Social Media</p>
+                        <p className="footer-icon">
+                           <a href="https://www.instagram.com/jun.akarda/" target="_blank"><InstagramOutlined /> Juuni26</a> 
+                        </p>
+                        <p className="footer-icon">
+                           <a href="https://wa.me/qr/6AN3MPFDJHBMK1" target="_blank"><WhatsAppOutlined /> 08129230983 (Handi)</a>
+                        </p>
+                    </div>
+                </div>
+                <h5 className="footer-middle">pernahke @2020</h5>
             </footer>
         </div>
         // <Layout style={{ minHeight: "100vh" }}>

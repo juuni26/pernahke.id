@@ -1,7 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap');
+
+
 .container {
     margin: 0;
     width: 100%;
-    min-height: 80vh;    
+    min-height: 80vh;
+    font-family: 'Lato', sans-serif;    
 }
 
 .slashed {
@@ -49,10 +53,19 @@
 
 .logo {
     display: flex;
-    img {
-        width:5rem;        
+    a {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        
+        justify-content: center;
     }
+    img {
+        width:6rem;        
+    }
+    
     .logo-text {
+        margin-top: 2vh;
         height: 20vh;
         display: flex;
         flex-direction: column;
@@ -68,8 +81,52 @@
 
 footer {
     width: 100%;
+    height: 30vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    background-color: #32324e;
+    position: relative;
+    color: #fff;
+
+    
+    // align-items: center;
 }
+
+.footer {
+    display: flex;
+    font-size: 1rem;
+
+    justify-content: space-around;
+    .footer-title {
+        text-transform: uppercase;
+        cursor: initial;
+
+        margin-bottom: 1vh;
+    }
+    p {
+        
+        margin: 0;
+    }
+    .footer-icon {
+        a {color: #fff;
+        &:hover {
+            color: rgb(147, 197, 147);
+        }
+        }
+        
+        
+    }
+}
+
+.footer-middle {
+    position: absolute;
+    bottom: .5vh;
+    left: 50%;
+    transform: translateX(-50%);
+    text-transform: uppercase;
+    
+    color: #fff;
+    
+}
+

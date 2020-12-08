@@ -23,6 +23,9 @@ import {
     MinusCircleOutlined,
     PlusOutlined,
     CaretRightOutlined,
+    CloseOutlined,
+    ArrowRightOutlined,
+    ArrowLeftOutlined,
     SearchOutlined,
     ArrowDownOutlined,
     LeftOutlined,
@@ -43,6 +46,7 @@ const Home = () => {
     const [provinsi, setProvinsi] = useState(null);
     const [kota, setKota] = useState(null);
     const [gerak, setGerak] = useState(null);
+    const [searchState,setSearchState] = useState(null);
 
     const slideLeft = () => {
         // let newSlider = +slider - 1 === 0 ? 3 : slider - 1;
@@ -63,9 +67,13 @@ const Home = () => {
         setProvinsiSlide(newSlider);
     };
 
+    const handleSearch = e =>{
+        e.preventDefault();
+        setSearchState(true);
+    }
+
     const handleToKota = id => {
-        Axios.get(`/data/kota-provinsi/${id}`).then(response => {
-            console.log(response, id, "id");
+        Axios.get(`/data/kota-provinsi/${id}`).then(response => {        
             if (response.data.status === "failed") {
                 message.error(response.data.message);
             } else {
@@ -84,7 +92,7 @@ const Home = () => {
             })
             .then(() => {});
 
-        const txt = "cari tempat yang kamu mau";
+        const txt = "Cari tempat yang kamu mau ...";
         let txtLen = txt.length;
         setPlaceholder("|");
         let i = 0;
@@ -101,79 +109,88 @@ const Home = () => {
 
     return (
         <div className="homepagee">
-            <div className="search-result" style={{display:"none"}}>
-                <section className="search-result-list">
-
-                    <div className="single-result">
-                        <h6>Ancol, Jakarta utara</h6>
-                        <div className="single-result-content">
-                            <img src="https://images.bisnis-cdn.com/posts/2020/06/30/1259392/bio-ancol-3.jpg"/>
-                            <p>loremi ipsffafu afafkfkfkefkof efoekfoefkoefksa fkfa loremi ipsffafu afafkfkfkefkof efoekfoefkoefksa fkfa loremi ipsffafu afafkfkfkefkof efoekfoefkoefksa fkfa
-                                ... <span className="see-more">See more</span>
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="single-result">
-                        <h6>Ancol, Jakarta utara</h6>
-                        <div className="single-result-content">
-                            <img src="https://images.bisnis-cdn.com/posts/2020/06/30/1259392/bio-ancol-3.jpg"/>
-                            <p>loremi ipsffafu afafkfkfkefkof efoekfoefkoefksa fkfa loremi ipsffafu afafkfkfkefkof efoekfoefkoefksa fkfa loremi ipsffafu afafkfkfkefkof efoekfoefkoefksa fkfa
-                                ... <span className="see-more">See more</span>
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="single-result">
-                        <h6>Ancol, Jakarta utara</h6>
-                        <div className="single-result-content">
-                            <img src="https://images.bisnis-cdn.com/posts/2020/06/30/1259392/bio-ancol-3.jpg"/>
-                            <p>loremi ipsffafu afafkfkfkefkof efoekfoefkoefksa fkfa loremi ipsffafu afafkfkfkefkof efoekfoefkoefksa fkfa loremi ipsffafu afafkfkfkefkof efoekfoefkoefksa fkfa
-                                ... <span className="see-more">See more</span>
-                            </p>
-                        </div>
-                    </div>
-                   
-                {/* <div>
-                    sebelumnya
+            <div className="search-result" style={searchState? {display: "block"}:{display: "none"} } >
+                <div className="top-leftt"onClick={()=>{setSearchState(null)}}>
+                <CloseOutlined />
                 </div>
-                <div>halaman 1</div>
-                <div>
-                    selanjutnya
-                </div> */}
+                <section className="search-result-list">
+                    <div className="single-result">
+                        <h6>Ancol, Jakarta utara</h6>
+                        <div className="single-result-content">
+                            <img src="https://images.bisnis-cdn.com/posts/2020/06/30/1259392/bio-ancol-3.jpg" />
+                            <p>
+                                loremi ipsffafu afafkfkfkefkof efoekfoefkoefksa
+                                fkfa loremi ipsffafu afafkfkfkefkof
+                                efoekfoefkoefksa fkfa loremi ipsffafu
+                                afafkfkfkefkof efoekfoefkoefksa fkfa ...{" "}
+                                <span className="see-more">See more</span>
+                            </p>
+                        </div>
+                    </div>
 
+                    <div className="single-result">
+                        <h6>Ancol, Jakarta utara</h6>
+                        <div className="single-result-content">
+                            <img src="https://images.bisnis-cdn.com/posts/2020/06/30/1259392/bio-ancol-3.jpg" />
+                            <p>
+                                loremi ipsffafu afafkfkfkefkof efoekfoefkoefksa
+                                fkfa loremi ipsffafu afafkfkfkefkof
+                                efoekfoefkoefksa fkfa loremi ipsffafu
+                                afafkfkfkefkof efoekfoefkoefksa fkfa ...{" "}
+                                <span className="see-more">See more</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="single-result">
+                        <h6>Ancol, Jakarta utara</h6>
+                        <div className="single-result-content">
+                            <img src="https://images.bisnis-cdn.com/posts/2020/06/30/1259392/bio-ancol-3.jpg" />
+                            <p>
+                                loremi ipsffafu afafkfkfkefkof efoekfoefkoefksa
+                                fkfa loremi ipsffafu afafkfkfkefkof
+                                efoekfoefkoefksa fkfa loremi ipsffafu
+                                afafkfkfkefkof efoekfoefkoefksa fkfa ...{" "}
+                                <span className="see-more">See more</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="leftt"><ArrowLeftOutlined /> Sebelumnya</div>
+                    <div className="middlee">Halaman 1</div>
+                    <div className="rightt">Selanjutnya <ArrowRightOutlined /></div>
                 </section>
             </div>
 
             <div className="search-section">
                 <div className="main-search">
                     <h5>Lihat kata mereka yang pernah ke ... </h5>
-                    <form>
+                    <form onSubmit={handleSearch}>
                         <input
                             type="text"
                             name="name"
                             placeholder={placeholder}
                             list="data"
                         />
-                        <span className="samping-input">
+                        <button className="samping-input">
                             <SearchOutlined />
-                        </span>
+                        </button>
                         <datalist id="data">
                             <option value="test ">test</option>
                         </datalist>
                     </form>
                 </div>
 
-                <div className="btmm1">Bingung? ayo eksplore Indonesia !</div>
+                <div className="btmm1">Bingung? Ayo explore Indonesia !</div>
 
                 <div className="arrow bounce btmm" onClick={executeScroll}>
                     <span>
-                        <ArrowDownOutlined />
+                        <ArrowDownOutlined style={{color:"#fff"}} />
                     </span>
                 </div>
             </div>
 
-            <div className="whole-section" ref={myRef}>
+            <div className="whole-section" >
                 <section
                     className={
                         slider === 1
@@ -187,7 +204,7 @@ const Home = () => {
                     <div className="rightDir" onClick={slideRight}>
                         <RightOutlined />
                     </div>
-                    <h5>Provinsi Section</h5>
+                    <h5 className="area-title" ref={myRef}>Provinsi Section</h5>
 
                     <div className="picture-list">
                         {provinsi && provinsi.length > 0 ? (

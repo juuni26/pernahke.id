@@ -33,10 +33,9 @@ const Login = () => {
                 if (response.data.status === "failed") {
                     message.error(response.data.message);
                 } else {
-
                     message.success(response.data.message);
-                    localStorage.setItem('token',response.data.token);
-                    localStorage.setItem('user',response.data.data);
+                    localStorage.setItem("token", response.data.token);
+                    localStorage.setItem("user", response.data.data);
                     setToken(response.data.token);
                     setUser(response.data.data);
                     setRedirect(true);
@@ -50,68 +49,73 @@ const Login = () => {
         return <Redirect to="/" />;
     } else {
         return (
-            <Form
-                name="normal_login"
-                className="login-form"
-                initialValues={{
-                    remember: true
-                }}
-                onFinish={onFinish}
-            >
-                <Form.Item
-                    name="email"
-                    rules={[
-                        {
-                            type: "email",
-                            message: "The input is not valid E-mail!"
-                        },
-                        {
-                            required: true,
-                            message: "Please input your E-mail!"
-                        }
-                    ]}
+            <div className="loginn">
+                <Form
+                    name="normal_login"
+                    className="login-form"
+                    initialValues={{
+                        remember: true
+                    }}
+                    onFinish={onFinish}
                 >
-                    <Input
-                        prefix={
-                            <UserOutlined className="site-form-item-icon" />
-                        }
-                        placeholder="Email"
-                    />
-                </Form.Item>
-                <Form.Item
-                    name="password"
-                    rules={[
-                        {
-                            required: true,
-                            message: "Please input your Password!"
-                        }
-                    ]}
-                >
-                    <Input
-                        prefix={
-                            <LockOutlined className="site-form-item-icon" />
-                        }
-                        type="password"
-                        placeholder="Password"
-                    />
-                </Form.Item>
-                <Form.Item>
-                    <Form.Item name="remember" valuePropName="checked" noStyle>
-                        <Checkbox>Remember me</Checkbox>
-                    </Form.Item>
-                </Form.Item>
-
-                <Form.Item>
-                    <Button
-                        type="primary"
-                        htmlType="submit"
-                        className="login-form-button"
+                    <Form.Item
+                        name="email"
+                        rules={[
+                            {
+                                type: "email",
+                                message: "The input is not valid E-mail!"
+                            },
+                            {
+                                required: true,
+                                message: "Please input your E-mail!"
+                            }
+                        ]}
                     >
-                        Log in
-                    </Button>
-                    Or <a href="/register">register now!</a>
-                </Form.Item>
-            </Form>
+                        <Input
+                            prefix={
+                                <UserOutlined className="site-form-item-icon" />
+                            }
+                            placeholder="Email"
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        name="password"
+                        rules={[
+                            {
+                                required: true,
+                                message: "Please input your Password!"
+                            }
+                        ]}
+                    >
+                        <Input
+                            prefix={
+                                <LockOutlined className="site-form-item-icon" />
+                            }
+                            type="password"
+                            placeholder="Password"
+                        />
+                    </Form.Item>
+                    <Form.Item>
+                        <Form.Item
+                            name="remember"
+                            valuePropName="checked"
+                            noStyle
+                        >
+                            <Checkbox>Remember me</Checkbox>
+                        </Form.Item>
+                    </Form.Item>
+
+                    <Form.Item>
+                        <Button
+                            type="primary"
+                            htmlType="submit"
+                            className="login-form-button"
+                        >
+                            Login
+                        </Button> or <a href="/register">Register now!</a>
+                    </Form.Item>
+                </Form>
+            </div>
         );
     }
 };
