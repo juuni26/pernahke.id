@@ -200,7 +200,7 @@ return  <Redirect to='/login'/>
           name="alamat"
           label={
             <span>
-              Tempat tinggal
+              Asal
             </span>
           }
           rules={[{ required: true, message: 'Please input your place!', whitespace: true }]}

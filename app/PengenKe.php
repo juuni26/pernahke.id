@@ -31,7 +31,7 @@ class PengenKe extends Model
         else if($status == 'inactive') $status = 0;
         else return 'no';
 
-        $update = PengenKe::where('tempats_id',$tempat)->where('orangs_id',decrypt($token))->first();
+        $update = PengenKe::where('tempats_id',$tempat_id)->where('orangs_id',decrypt($token))->first();
         if($update){
             $update->status = $status;
             $update->save();

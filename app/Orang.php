@@ -28,6 +28,14 @@ class Orang extends Model
         return $this->hasMany('App\PengenKe');
     }
 
+    public function review_points(){
+        return $this->hasMany('App\ReviewPoint');
+    }
+
+    public function reviews(){
+        return $this->hasMany('App\Review');
+    }
+
     public static function register($nama,$email,$password,$tempat_tinggal,$telepon,$ktp){
         $ins = new Orang([
             'nama' => $nama,

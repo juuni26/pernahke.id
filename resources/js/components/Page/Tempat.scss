@@ -182,9 +182,14 @@
     .review-content-center{
         padding-top: 2vh;
         // background-color: #eee;        
+        
         width: 60%;
         display: flex;
         flex-direction: column;
+        p:first-child{
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
     }
     .review-content-right{
         background-color: rgb(227, 236, 255);        
@@ -208,6 +213,7 @@
     }
 
     .activee {
+        // color: gray;
         color: rgb(2, 2, 49);
     }
 }
