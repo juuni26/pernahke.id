@@ -32,6 +32,10 @@ class Tempat extends Model
         return $this->belongsTo('App\Kota');
     }
 
+    public function pengenkes(){
+        return $this->hasMany('App\PengenKe');
+    }
+
     public static function insTempat($kota,$tempat,$alamat,$biaya,$deskripsi,$image,$hashtag,$kategori,$gmaps = NULL){
         
         $ins = new Tempat([

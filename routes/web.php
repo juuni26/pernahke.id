@@ -36,6 +36,7 @@ route::post('create/kategori','pernahControl@insKategori');
 route::post('register','pernahControl@register');
 route::post('login','pernahControl@login');
 route::post('logout','pernahControl@logout');
+route::post('like','pernahControl@like');
 
 
 route::get('data/provinsi','pernahControl@getProvinsi');

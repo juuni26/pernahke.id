@@ -311,21 +311,28 @@ class pernahControl extends Controller
     }
 
     public function getTempatD($id){
-        if(!$id) return $this->respon('failed','Tempat tidak ditemukan!');
+        if(!$id) {
+            return $this->respon('failed','Tempat tidak ditemukan!');
+        }
+
         $data = Tempat::find($id);
-        if(!$data) return $this->respon('failed','Tempat tidak ditemukan!');
-            $item[]= [
-                'tempat'        => $data->tempat,
-                'alamat'        => $data->alamat,
-                'gmaps'         => $data->gmaps,
-                'foto'          => $data->foto,
-                'biaya'         => $data->biaya,
-                'deskripsi'     => $data->deskripsi,
-                'hashtag'       => $data->hashtag,
-                'kota'          => $data->kotas->kota,
-                'kategori'      => $data->kategoris->pluck('kategori')->toArray() ,
-            ];
-        $this->respon('success','Berikut detail tempat '.strtoupper($data->tempat),$item);
+
+        if(!$data){
+            return $this->respon('failed','Tempat tidak ditemukan!');
+        } 
+            
+        $item[]= [
+            'tempat'        => $data->tempat,
+            'alamat'        => $data->alamat,
+            'gmaps'         => $data->gmaps,
+            'foto'          => $data->foto,
+            'biaya'         => $data->biaya,
+            'deskripsi'     => $data->deskripsi,
+            'hashtag'       => $data->hashtag,
+            'kota'          => $data->kotas->kota,
+            'kategori'      => $data->kategoris->pluck('kategori')->toArray() ,
+        ];
+        return $this->respon('success','Berikut detail tempat '.strtoupper($data->tempat),$item);
 
     }
 
@@ -344,6 +351,42 @@ class pernahControl extends Controller
         }
 
         return $this->respon('success','',$item);
+
+    }
+
+    public function like(request $req){
+        if($req->token) {
+            $cek = Session::cekToken($req->token);
+            if($cek == 'no'){
+                return $this->respon('failed','Waktu login anda habis!');
+            } 
+            $update = Session::updateToken($req->token);
+            if($update == 'no'){
+                return $this->respon('failed','Anda harus login ulang!');
+            }
+            $token = $req->token;
+        } else{
+            return $this->respon('failed','Anda harus login terlebih dahulu!');
+        }
+        if(!$req->tempat){
+            return $this->respon('failed','Tidak ada tempat yang dipilih!');
+        } else $tempat = $req->tempat;
+
+        if(!$req->status){
+            return $this->respon('failed','Error!');
+        } else $status = $req->status;
+
+        $ins = PengenKe::like($token,$tempat,$status);
+        if($ins == 'no'){
+            return $this->respon('failed','Gagal like tempat!');
+        } else {
+            if($status == 'active'){
+                return $this->respon('success','Semoga anda bisa kesini!');
+            } else {
+                return $this->respon('success','Mengapa anda tidak mau kesini?');
+            }
+        }
+
 
     }
 
