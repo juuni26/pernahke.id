@@ -9,6 +9,7 @@ import Tempat from "./Page/Tempat";
 
 import Login from "./User/Login";
 import Register from "./User/Register";
+import Main from './Main';
 
 
 // import Movie from "./Pages/Movie_detail";
@@ -46,6 +47,10 @@ const Routes = () => {
             </Route>
             <Route exact path="/register">
                 <Register />
+            </Route>
+
+            <Route exact path="/admin/input">
+                <Main/>
             </Route>
         </Switch>
     );

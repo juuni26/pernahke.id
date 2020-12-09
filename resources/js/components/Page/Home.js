@@ -199,10 +199,10 @@ const Home = () => {
                     }
                 >
                     <div className="leftDir" onClick={slideLeft}>
-                        <LeftOutlined />
+                        <LeftOutlined style={{fontSize:"2rem"}} />
                     </div>
                     <div className="rightDir" onClick={slideRight}>
-                        <RightOutlined />
+                        <RightOutlined style={{fontSize:"2rem"}} />
                     </div>
                     <h5 className="area-title" ref={myRef}>Provinsi Section</h5>
 
