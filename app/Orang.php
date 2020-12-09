@@ -24,6 +24,10 @@ class Orang extends Model
         return $this->hasOne('App\Session');
     }
 
+    public function pengenkes(){
+        return $this->hasMany('App\PengenKe');
+    }
+
     public static function register($nama,$email,$password,$tempat_tinggal,$telepon,$ktp){
         $ins = new Orang([
             'nama' => $nama,
