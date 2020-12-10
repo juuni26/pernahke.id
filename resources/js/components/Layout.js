@@ -33,10 +33,10 @@ const LayoutContent = props => {
                         <img src={Logo} />
                     </Link>
                     <div className="logo-text">
-                        <h3>
-                            <span>Indonesia</span>Travel Companion
-                        </h3>
-                        <p>referensi liburan indonesia</p>
+                        <h1 style={{textAlign:"left",width:"100%",fontWeight:"bolder"}}>
+                            PernahKe
+                        </h1>
+                        <p style={{fontStyle:"italic"}}>Tempat sharing pengalaman wisata di Indonesia </p>
                     </div>
                 </div>
                 <div className="userr">
