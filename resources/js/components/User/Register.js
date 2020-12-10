@@ -101,7 +101,7 @@ const RegistrationForm = () => {
   const prefixSelector = (
     <Form.Item name="prefix" noStyle>
       <Select style={{ width: 70 }}>
-        <Option value="0">+62</Option>        
+        <Option value="+62">+62</Option>        
       </Select>
     </Form.Item>
   );
