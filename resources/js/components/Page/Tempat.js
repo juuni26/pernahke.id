@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
     BrowserRouter as Router,
     Switch,
@@ -6,116 +6,539 @@ import {
     Link,
     useParams
 } from "react-router-dom";
-
+import { BaseContext } from "../BaseContext";
+import Axios from 'axios'
 import {
-    Rate
+    Rate, Skeleton, message, Avatar, Button, Modal, Form, Input, Radio
 } from "antd";
 
 import {
-    HeartOutlined, UpOutlined, DownOutlined, HeartFilled
+    HeartOutlined, UpOutlined, DownOutlined, HeartFilled, PlusOutlined
 } from "@ant-design/icons";
 
 
 import "./Tempat.scss";
 
+const CollectionCreateForm = ({ visible, onCreate, onCancel }) => {
+    const [form] = Form.useForm();
+    return (
+        <Modal
+            visible={visible}
+            title="Tambah tips atau review terkait tempat ini"
+            okText="tambah"
+            cancelText="batal"
+            onCancel={onCancel}
+            onOk={() => {
+                form
+                    .validateFields()
+                    .then((values) => {
+                        form.resetFields();
+                        onCreate(values);
+                    })
+                    .catch((info) => {
+                        console.log('Validate Failed:', info);
+                    });
+            }}
+        >
+            <Form
+                form={form}
+                layout="vertical"
+                name="form_in_modal"
+                initialValues={{
+                    modifier: 'public',
+                }}
+            >
+                <Form.Item
+                    name="review"
+                    label="Review"
+                    rules={[
+                        {
+                            required: true,
+                            message: 'Tolong masukkan review!',
+                        },
+                    ]}
+                >
+                    <Input.TextArea />
+                </Form.Item>
+
+            </Form>
+        </Modal>
+    );
+};
+
 const Tempat = () => {
     const [likeState, setLikeState] = useState(null);
+    const [visible, setVisible] = useState(false);
+
+
     const [score, setScore] = useState(0);
     const [up, setUp] = useState(false);
     const [down, setDown] = useState(false);
+    const [data, setData] = useState(null);
+    const [dataReview, setDataReview] = useState(null);
+    const [jumlahLike, setJumlahLike] = useState(0);
+    const { token, setToken } = useContext(BaseContext);
+
 
     const { id } = useParams();
 
-    return (
-        <div>
-            <article className="tempat-section">
-                <div className="tempat-banner">
-                    <img
-                        className="tempat-image"
-                        src="https://statik.tempo.co/data/2017/10/26/id_657847/657847_720.jpg"
-                    />
-                    <h3>Ancol</h3>
-                </div>
 
-                <div className="tempat-like">
-                    <div className="like">
-                        <HeartFilled style={likeState ? { display: "block", fontSize: "5rem", color: "red" } : { display: "none" }} onClick={() => { setLikeState(!likeState) }} />
-                        <HeartOutlined style={likeState ? { display: "none" } : { display: "block", fontSize: "5rem", color: "red" }} onClick={() => { setLikeState(!likeState) }} />
-                    </div>
-                    <div className="desc">Like untuk <span className="pengenke">PengenKe</span><br /><i>1000 orang <span className="pengenke">PengenKe</span> sini</i></div>
-                    <div className="rating"><Rate allowHalf defaultValue={5} style={{ background: "#fff" }} allowCle="false" /> </div>
-                </div>
-                <p className="tempat-alamat">Jl. KH Asnawi 20 HW, Polytron kudus</p>
-                <div className="tempat-deskripsi">
-                    <div className="deskripsi-detail"><p className="deskripsi-detail-content"><span>Deskripsi</span>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p></div>
-                    <div className="deskripsi-detail"><p className="deskripsi-detail-content"><span>Estimasi Biaya</span>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum</p> </div>
-                </div>
-                <div className="tempat-tag">
-                    <h5>TAGS</h5>
-                    <div className="tempat-tag-detail">
-                        <div className="tempat-tag-detail-detail">testing</div>
-                        <div className="tempat-tag-detail-detail">testing</div>
-                        <div className="tempat-tag-detail-detail">testing</div>
-                        <div className="tempat-tag-detail-detail">testing</div>
-                        <div className="tempat-tag-detail-detail">testing</div>
-                        <div className="tempat-tag-detail-detail">testing</div>
+    useEffect(() => {
+
+        Axios.get(`/data/tempat-detail/${id}`).then(resp => {
+            // console.log(resp.data.data[0]);
+            setData(resp.data.data[0]);
+        });
+
+        Axios.defaults.xsrfHeaderName = "X-CSRFToken";
+        let bodyFormData = new FormData();
+        let tkn = token ? token : "";
+        bodyFormData.append("token", tkn);
+        bodyFormData.append("tempat", id);
+        console.log("request", id, tkn);
+
+        Axios({
+            method: "post",
+            url: "/pengenke",
+            data: bodyFormData,
+            headers: {
+                "X-CSRF-TOKEN": csrf_token
+            }
+        })
+            .then(response => {
+
+             
+                if (response.data.status !== "failed") {
 
 
+                    setJumlahLike(response.data.data.total);
+                    if (response.data.data.status === 1) {
+                        setLikeState(true);
+                    }
+                    else {
+                        setLikeState(null);
+                    }
+                    // message.success(response.data.message);
+
+                }
+            }).then(() => {
 
 
-                    </div>
-                </div>
-                {/* <h3>ID: {id}</h3> */}
-            </article>
-            <section className="review-section">
-                <h4>Lihat Kata mereka yang <span className="pernahke">PernahKe</span> sini</h4>
-                <div className="review-content">
-                    <div className="review-content-left"><img src="https://i.pinimg.com/originals/74/cc/f2/74ccf28d88b3606d073f20fe70e53539.png" /></div>
-                    <div className="review-content-center"><p>Nama lengkap | Tanjung Priok Jakarta </p>
-                        <p>This is mantep banget ajibbb</p>
-                    </div>
-                    <div className="review-content-right"><p>rate time</p>
-                        <div className="vote">
-                            <div className={up ? "vote-arrow activee" : "vote-arrow"} onClick={() => {
-                                setUp(!up)
-                                if (!up) {
-                                    if (down) {
-                                        setScore(score + 2);
-                                    } else {
-                                        setScore(score + 1);
-                                    }
+                Axios.defaults.xsrfHeaderName = "X-CSRFToken";
+                let bodyFormData = new FormData();
+                let tkn = token ? token : "";
+                bodyFormData.append("token", tkn);
+                bodyFormData.append("tempat", id);
+
+
+                Axios({
+                    method: "post",
+                    url: "/data/review",
+                    data: bodyFormData,
+                    headers: {
+                        "X-CSRF-TOKEN": csrf_token
+                    }
+                })
+                    .then(response => {
+
+                        if (response.data.status !== "failed") {
+
+                            if (response.data.status === "no_token") {
+                                setDataReview(response.data.data);
+                            }
+                            else {
+                                setDataReview(response.data.data);
+
+                            }
+
+                        }
+                    })
+            })
+            .catch(function (response) {
+                console.log(response);
+            });
+
+
+
+
+
+    }, []);
+
+
+    const onCreate = (values) => {
+        console.log('Received values of form: ', values);
+        setVisible(false);
+
+        Axios.defaults.xsrfHeaderName = "X-CSRFToken";
+        let bodyFormData = new FormData();
+        let tkn = token ? token : "";
+
+        bodyFormData.append("token", tkn);
+        bodyFormData.append("tempat", id);
+        bodyFormData.append("review", values.review);
+
+
+        Axios({
+            method: "post",
+            url: "/review",
+            data: bodyFormData,
+            headers: {
+                "X-CSRF-TOKEN": csrf_token
+            }
+        })
+            .then(response => {
+
+
+                if (response.data.status !== "failed") {
+
+                    Axios.defaults.xsrfHeaderName = "X-CSRFToken";
+                    let bodyFormData = new FormData();
+                    let tkn = token ? token : "";
+                    bodyFormData.append("token", tkn);
+                    bodyFormData.append("tempat", id);
+
+
+                    Axios({
+                        method: "post",
+                        url: "/data/review",
+                        data: bodyFormData,
+                        headers: {
+                            "X-CSRF-TOKEN": csrf_token
+                        }
+                    })
+                        .then(response => {
+
+                            if (response.data.status !== "failed") {
+
+                                if (response.data.status === "no_token") {
+                                    setDataReview(response.data.data);
                                 }
                                 else {
-                                    setScore(score - 1);
-                                }
-                                setDown(false);
+                                    setDataReview(response.data.data);
 
-                            }}><UpOutlined style={{ fontSize: "2rem" }} /></div>
-                            <div className="scoree">{score}</div>
-                            <div className={down ? "vote-arrow activee" : "vote-arrow"} onClick={() => {
-                                setDown(!down);
-                                if (!down) {
-                                    if (up) {
-                                        setScore(score - 2);
-                                    } else {
-                                        setScore(score - 1);
-                                    }
+                                }
+
+                            }
+                        }).then(() => {
+                            message.success(response.data.message);
+                        })
+                }
+
+                else {
+                    message.error(response.data.message);
+                }
+            })
+            .catch(function (response) {
+                console.log("test", response);
+            });
+
+
+
+
+    };
+
+    const handleLike = (kondisi) => {
+
+
+
+        let likee = !likeState ? "active" : "inactive";
+        console.log(likee)
+        // token,status,tempat
+        Axios.defaults.xsrfHeaderName = "X-CSRFToken";
+        let bodyFormData = new FormData();
+        let tkn = token ? token : "";
+
+        bodyFormData.append("token", tkn);
+        bodyFormData.append("tempat", id);
+        bodyFormData.append("status", likee);
+
+
+        Axios({
+            method: "post",
+            url: "/like",
+            data: bodyFormData,
+            headers: {
+                "X-CSRF-TOKEN": csrf_token
+            }
+        })
+            .then(response => {
+
+                if (response.data.status !== "failed") {
+                    if (response.data) {
+                        setToken(response.data.token);
+                        localStorage.setItem('token', response.data.token);
+                        setLikeState(!likeState);
+                        if (kondisi === "minus") {
+                            setJumlahLike(+jumlahLike - 1)
+                        }
+                        else {
+                            setJumlahLike(+jumlahLike + 1)
+
+                        }
+
+                    }
+                    else {
+                        message.error(response.data.message);
+                    }
+
+
+                }
+                else {
+                    message.error(response.data.message);
+                }
+            })
+            .catch(function (response) {
+                console.log(response);
+            });
+
+
+
+
+    };
+
+    const handleUp = (status, review_id) => {
+
+        Axios.defaults.xsrfHeaderName = "X-CSRFToken";
+        let bodyFormData = new FormData();
+        let tkn = token ? token : "";
+        let vote = status === "up" ? "up" : "nothing";
+
+
+        //    
+        bodyFormData.append("token", tkn);
+        bodyFormData.append("review_id", review_id);
+        bodyFormData.append("vote", vote);
+
+
+        Axios({
+            method: "post",
+            url: "/reviewvote",
+            data: bodyFormData,
+            headers: {
+                "X-CSRF-TOKEN": csrf_token
+            }
+        })
+            .then(response => {
+
+                if (response.data.status !== "failed") {
+
+
+                    Axios.defaults.xsrfHeaderName = "X-CSRFToken";
+                    let bodyFormData = new FormData();
+                    let tkn = token ? token : "";
+                    bodyFormData.append("token", tkn);
+                    bodyFormData.append("tempat", id);                
+                  
+    
+                    Axios({
+                        method: "post",
+                        url: "/data/review",
+                        data: bodyFormData,
+                        headers: {
+                            "X-CSRF-TOKEN": csrf_token
+                        }
+                    })
+                        .then(response => {
+    
+                            if (response.data.status !== "failed") {
+                                
+                                if(response.data.status === "no_token"){
+                                    setDataReview(response.data.data);
                                 }
                                 else {
-                                    setScore(score + 1);
+                                    setDataReview(response.data.data);
+    
+                                }                           
+            
+                            }
+                        })                
+                }
+                else {
+                    message.error(response.data.message);
+                }
+            })
+            .catch(function (response) {
+                console.log(response);
+            });
+
+    }
+
+    const handleDown = (status, review_id) => {
+
+        Axios.defaults.xsrfHeaderName = "X-CSRFToken";
+        let bodyFormData = new FormData();
+        let tkn = token ? token : "";
+        let vote = status === "down" ? "down" : "nothing";
+
+
+        //    
+        bodyFormData.append("token", tkn);
+        bodyFormData.append("review_id", review_id);
+        bodyFormData.append("vote", vote);
+
+
+        Axios({
+            method: "post",
+            url: "/reviewvote",
+            data: bodyFormData,
+            headers: {
+                "X-CSRF-TOKEN": csrf_token
+            }
+        })
+            .then(response => {
+
+                if (response.data.status !== "failed") {
+
+                    Axios.defaults.xsrfHeaderName = "X-CSRFToken";
+                    let bodyFormData = new FormData();
+                    let tkn = token ? token : "";
+                    bodyFormData.append("token", tkn);
+                    bodyFormData.append("tempat", id);                
+                  
+    
+                    Axios({
+                        method: "post",
+                        url: "/data/review",
+                        data: bodyFormData,
+                        headers: {
+                            "X-CSRF-TOKEN": csrf_token
+                        }
+                    })
+                        .then(response => {
+    
+                            if (response.data.status !== "failed") {
+                                
+                                if(response.data.status === "no_token"){
+                                    setDataReview(response.data.data);
                                 }
+                                else {
+                                    setDataReview(response.data.data);
+                                }                           
+            
+                            }
+                        })
+                }
+                else {
+                    message.error(response.data.message);
+                }
+            })
+            .catch(function (response) {
+                console.log(response);
+            });
 
+    }
 
-                                setUp(false);
-                            }}><DownOutlined style={{ fontSize: "2rem" }} /></div>
+    if (!data) {
+        return (<Skeleton active />)
+    }
+    else {
+        return (
+
+            <div>
+
+                <article className="tempat-section">
+                    <div className="tempat-banner">
+                        <img
+                            className="tempat-image"
+                            src="https://statik.tempo.co/data/2017/10/26/id_657847/657847_720.jpg"
+                        />
+                        <h3>{data.tempat}</h3>
+                    </div>
+
+                    <div className="tempat-like">
+                        <div className="like">
+                            <HeartFilled style={likeState ? { display: "block", fontSize: "5rem", color: "red" } : { display: "none" }} onClick={() => { handleLike("minus"); }} />
+                            <HeartOutlined style={likeState ? { display: "none" } : { display: "block", fontSize: "5rem", color: "red" }} onClick={() => { handleLike("plus"); }} />
+                        </div>
+                        <div className="desc">Like jika <span className="pengenke">PengenKe</span> sini<br /><i>{jumlahLike} orang <span className="pengenke">PengenKe</span> sini</i></div>
+                        {/* <div className="rating"><Rate allowHalf defaultValue={5} style={{ background: "#fff" }} allowCle="false" /> </div> */}
+                    </div>
+                    <p className="tempat-alamat">{data.alamat}</p>
+                    <div className="tempat-deskripsi">
+                        <div className="deskripsi-detail"><p className="deskripsi-detail-content"><span>Deskripsi</span>{data.deskripsi}</p></div>
+                        <div className="deskripsi-detail"><p className="deskripsi-detail-content"><span>Estimasi Biaya</span>{data.biaya}</p> </div>
+                    </div>
+                    <div className="tempat-tag">
+                        <h5>TAGS</h5>
+                        <div className="tempat-tag-detail">
+                            {data.hashtag.split(',').map(d =>
+                                <div className="tempat-tag-detail-detail">{d}</div>
+                            )}
+
+                            {/* <div className="tempat-tag-detail-detail">testing</div>
+                            <div className="tempat-tag-detail-detail">testing</div>
+                            <div className="tempat-tag-detail-detail">testing</div>
+                            <div className="tempat-tag-detail-detail">testing</div>
+                            <div className="tempat-tag-detail-detail">testing</div> */}
+
                         </div>
                     </div>
-                </div>
+                    {/* <h3>ID: {id}</h3> */}
+                </article>
+                <section className="review-section">
+                    <h4>Lihat Kata mereka yang <span className="pernahke">PernahKe</span> sini</h4>
+                    <div style={{ textAlign: "left", width: "100%", paddingLeft: "3%" }}>
+                        <Button
+                            type="primary"
+                            onClick={() => {
+                                setVisible(true);
+                            }}
+                        >
+                            <PlusOutlined /> Sharing sesuatu ditempat ini
+      </Button>
+                        <CollectionCreateForm
+                            visible={visible}
+                            onCreate={onCreate}
+                            onCancel={() => {
+                                setVisible(false);
+                            }}
+                        />
+                    </div>
 
 
-            </section>
-        </div>
-    );
+                    {dataReview && dataReview.length > 0 ?
+                        dataReview.map(review => {
+                            return (<div className="review-content">
+                                <div className="review-content-left"><Avatar style={{ backgroundColor: "darkblue", verticalAlign: 'middle', fontSize: "2rem" }} size={{ xs: 24, sm: 32, md: 44, lg: 64, xl: 80, xxl: 100 }} >
+                                    {review.nama && review.nama.trim().split(' ').length>1? review.nama.trim().split(' ').reduce((accumulator, currentValue) => accumulator[0] + currentValue[0]): review.nama? review.nama[0]:""}                               
+                                </Avatar></div>
+                                <div className="review-content-center"><p>{review.nama} | {review.asal} </p>
+                                    <p>{review.review}</p>
+                                </div>
+                                <div className="review-content-right"><p>rate time</p>
+                                    <div className="vote">
+                                        <div className={review.vote === "up" ? "vote-arrow activee" : "vote-arrow"} onClick={() => {
+                                            if (review.vote === "up") {
+                                                handleUp("nothing", review.id);
+                                            }
+                                            else {
+                                                handleUp("up", review.id);
+                                            }
+                                        }}><UpOutlined style={{ fontSize: "2rem" }} /></div>
+                                        <div className="scoree">{review.total}</div>
+                                        <div className={review.vote === "down" ? "vote-arrow activee" : "vote-arrow"} onClick={() => {
+                                            if (review.vote === "down") {
+                                                handleDown("nothing", review.id);
+                                            }
+                                            else {
+                                                handleDown("down", review.id);
+                                            }
+                                        }}><DownOutlined style={{ fontSize: "2rem" }} /></div>
+                                    </div>
+                                </div>
+                            </div>
+                            )
+
+                        })
+                        : dataReview && dataReview.length === 0 ? <div style={{ margin: "4vh 0", fontSize: "1.5rem", color: "gray" }}>Belum ada yang sharing disini, Yuk jadi yang pertama!</div> : <Skeleton active />}
+
+
+
+                </section>
+            </div>
+        );
+    }
+
 };
 
 export default Tempat;
