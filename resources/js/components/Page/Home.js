@@ -20,10 +20,7 @@ import {
     Skeleton
 } from "antd";
 
-import {   
-    Link   
-} from "react-router-dom";
-
+import { Link } from "react-router-dom";
 
 import {
     MinusCircleOutlined,
@@ -50,17 +47,18 @@ const Home = () => {
     const [slider, setSlider] = useState(1);
     const [provinsiSlide, setProvinsiSlide] = useState(1);
     const [provinsi, setProvinsi] = useState(null);
-    
+
     const [kota, setKota] = useState(null);
     const [kotaSlide, setKotaSlide] = useState(1);
 
     const [tempat, setTempat] = useState(null);
 
-    const [kotaName,setKotaName] = useState("Kota");
-    const [tempatName,setTempatName] = useState("");
+    const [kotaName, setKotaName] = useState("Kota");
+    const [tempatName, setTempatName] = useState("");
 
     const [gerak, setGerak] = useState(null);
-    const [searchState,setSearchState] = useState(null);
+    const [searchState, setSearchState] = useState(null);
+    const [listSearch, setListSearch] = useState([]);
 
     const slideLeft = () => {
         // let newSlider = +slider - 1 === 0 ? 3 : slider - 1;
@@ -81,15 +79,12 @@ const Home = () => {
         setProvinsiSlide(newSlider);
     };
 
-
     const slideLeftKota = () => {
         // let newSlider = +slider - 1 === 0 ? 3 : slider - 1;
         // setSlider(newSlider);
 
         let newSlider =
-            +kotaSlide - 1 === 0
-                ? Math.ceil(kota.length / 10)
-                : kotaSlide - 1;
+            +kotaSlide - 1 === 0 ? Math.ceil(kota.length / 10) : kotaSlide - 1;
         setKotaSlide(newSlider);
     };
 
@@ -101,17 +96,16 @@ const Home = () => {
         setKotaSlide(newSlider);
     };
 
-
-    const handleSearch = e =>{
+    const handleSearch = e => {
         e.preventDefault();
         setSearchState(true);
-    }
+    };
 
-    const handleToKota = (id,provinsi_nama) => {
-        Axios.get(`/data/kota-provinsi/${id}`).then(response => {        
+    const handleToKota = (id, provinsi_nama) => {
+        Axios.get(`/data/kota-provinsi/${id}`).then(response => {
             if (response.data.status === "failed") {
                 message.error(response.data.message);
-            } else {                
+            } else {
                 setKota(response.data.data);
                 setSlider(2);
                 setKotaName(provinsi_nama);
@@ -119,11 +113,11 @@ const Home = () => {
         });
     };
 
-    const handleToTempat = (id,kota_nama) => {
-        Axios.get(`/data/kota-tempat/${id}`).then(response => {        
+    const handleToTempat = (id, kota_nama) => {
+        Axios.get(`/data/kota-tempat/${id}`).then(response => {
             if (response.data.status === "failed") {
                 message.error(response.data.message);
-            } else {                
+            } else {
                 setTempat(response.data.data);
                 setSlider(3);
                 setTempatName(kota_nama);
@@ -138,6 +132,17 @@ const Home = () => {
                 localStorage.setItem("provinsi", "true");
             })
             .then(() => {});
+
+        Axios.get("/data/listsearch").then(response => {
+            if (response.data.message !== "failed") {
+                
+                // var obj = {"1":5,"2":7,"3":0,"4":0,"5":0,"6":0,"7":0,"8":0,"9":0,"10":0,"11":0,"12":0}
+                let result = Object.keys(response.data.data).map((key) => response.data.data[key]);
+                setListSearch(result);
+
+
+            }
+        });
 
         const txt = "Cari tempat yang kamu mau ...";
         let txtLen = txt.length;
@@ -154,12 +159,19 @@ const Home = () => {
         }, 140);
     }, []);
 
-
     return (
         <div className="homepagee">
-            <div className="search-result" style={searchState? {display: "block"}:{display: "none"} } >
-                <div className="top-leftt"onClick={()=>{setSearchState(null)}}>
-                <CloseOutlined />
+            <div
+                className="search-result"
+                style={searchState ? { display: "block" } : { display: "none" }}
+            >
+                <div
+                    className="top-leftt"
+                    onClick={() => {
+                        setSearchState(null);
+                    }}
+                >
+                    <CloseOutlined />
                 </div>
                 <section className="search-result-list">
                     <div className="single-result">
@@ -204,9 +216,13 @@ const Home = () => {
                         </div>
                     </div>
 
-                    <div className="leftt"><ArrowLeftOutlined /> Sebelumnya</div>
+                    <div className="leftt">
+                        <ArrowLeftOutlined /> Sebelumnya
+                    </div>
                     <div className="middlee">Halaman 1</div>
-                    <div className="rightt">Selanjutnya <ArrowRightOutlined /></div>
+                    <div className="rightt">
+                        Selanjutnya <ArrowRightOutlined />
+                    </div>
                 </section>
             </div>
 
@@ -219,12 +235,18 @@ const Home = () => {
                             name="name"
                             placeholder={placeholder}
                             list="data"
+                            autoComplete="off"
                         />
                         <button className="samping-input">
                             <SearchOutlined />
                         </button>
                         <datalist id="data">
-                            <option value="test ">test</option>
+                            { 
+                            listSearch.length > 0
+                                ? listSearch.map(l => (
+                                      <option value={l}>{l}</option>
+                                  ))
+                                : ""}
                         </datalist>
                     </form>
                 </div>
@@ -233,15 +255,12 @@ const Home = () => {
 
                 <div className="arrow bounce btmm" onClick={executeScroll}>
                     <span>
-                        <ArrowDownOutlined style={{color:"#fff"}} />
+                        <ArrowDownOutlined style={{ color: "#fff" }} />
                     </span>
                 </div>
             </div>
 
-
-
-            <div className="whole-section" >
-
+            <div className="whole-section">
                 {/* section provinsi */}
                 <section
                     className={
@@ -251,12 +270,15 @@ const Home = () => {
                     }
                 >
                     <div className="leftDir" onClick={slideLeft}>
-                        <LeftOutlined style={{fontSize:"2rem"}} />
+                        <LeftOutlined style={{ fontSize: "2rem" }} />
                     </div>
                     <div className="rightDir" onClick={slideRight}>
-                        <RightOutlined style={{fontSize:"2rem"}} />
+                        <RightOutlined style={{ fontSize: "2rem" }} />
                     </div>
-                    <h5 className="area-title" ref={myRef}>Provinsi</h5>
+
+                    <h5 className="area-title" ref={myRef}>
+                        Provinsi
+                    </h5>
 
                     <div className="picture-list">
                         {provinsi && provinsi.length > 0 ? (
@@ -274,7 +296,10 @@ const Home = () => {
                                             <div
                                                 className="card"
                                                 onClick={() => {
-                                                    handleToKota(provinsi.id,provinsi.provinsi);
+                                                    handleToKota(
+                                                        provinsi.id,
+                                                        provinsi.provinsi
+                                                    );
                                                 }}
                                             >
                                                 <img
@@ -301,14 +326,16 @@ const Home = () => {
                                             <div
                                                 className="card"
                                                 onClick={() => {
-                                                    handleToKota(provinsi.id,provinsi.provinsi);
+                                                    handleToKota(
+                                                        provinsi.id,
+                                                        provinsi.provinsi
+                                                    );
                                                 }}
                                             >
                                                 <img
                                                     className="card-image"
                                                     src={url}
                                                     alt={url}
-                                                    
                                                 />
                                                 <div className="content">
                                                     <h4>{nama}</h4>
@@ -323,20 +350,33 @@ const Home = () => {
                     </div>
                 </section>
 
-
-{/* section kota */}
+                {/* section kota */}
                 <section
                     className={
                         slider === 2 ? "section kota active" : "section kota"
                     }
                 >
+                    <div
+                        style={{
+                            position: "absolute",
+                            left: "2vw",
+                            top: "2vh",
+                            fontSize: "1.2rem",
+                            cursor: "pointer"
+                        }}
+                        onClick={() => {
+                            window.location.reload();
+                        }}
+                    >
+                        <Button>Kembali ke Provinsi</Button>
+                    </div>
                     <div className="leftDir" onClick={slideLeftKota}>
-                        <LeftOutlined style={{fontSize:"2rem"}} />
+                        <LeftOutlined style={{ fontSize: "2rem" }} />
                     </div>
                     <div className="rightDir" onClick={slideRightKota}>
-                        <RightOutlined style={{fontSize:"2rem"}} />
+                        <RightOutlined style={{ fontSize: "2rem" }} />
                     </div>
-                <h5 className="area-title">Kota di {kotaName}</h5>
+                    <h5 className="area-title">Kota di {kotaName}</h5>
 
                     <div className="picture-list">
                         {kota && kota.length > 0 ? (
@@ -344,23 +384,21 @@ const Home = () => {
                                 let nama = kota.kota;
                                 let url = JSON.parse(kota.foto)[0];
                                 return (
-                                                                 
                                     <div
-                                        className="card"    
-                                        onClick={()=>{
-                                            handleToTempat(kota.id,kota.kota);
-                                        }}                                  
-                                    >                                        
+                                        className="card"
+                                        onClick={() => {
+                                            handleToTempat(kota.id, kota.kota);
+                                        }}
+                                    >
                                         <img
                                             className="card-image"
                                             src={url}
-                                            alt={nama+" foto"}
+                                            alt={nama + " foto"}
                                         />
                                         <div className="content">
                                             <h4>{nama}</h4>
                                         </div>
                                     </div>
-                                    
                                 );
                             })
                         ) : (
@@ -369,19 +407,34 @@ const Home = () => {
                     </div>
                 </section>
 
-
                 <section
                     className={
-                        slider === 3 ? "section tempat active" : "section tempat"
+                        slider === 3
+                            ? "section tempat active"
+                            : "section tempat"
                     }
                 >
+                    <div
+                        style={{
+                            position: "absolute",
+                            left: "2vw",
+                            top: "2vh",
+                            fontSize: "1.2rem",
+                            cursor: "pointer"
+                        }}
+                        onClick={() => {
+                            window.location.reload();
+                        }}
+                    >
+                        kembali ke provinsi
+                    </div>
                     <div className="leftDir" onClick={slideLeftKota}>
-                        <LeftOutlined style={{fontSize:"2rem"}} />
+                        <LeftOutlined style={{ fontSize: "2rem" }} />
                     </div>
                     <div className="rightDir" onClick={slideRightKota}>
-                        <RightOutlined style={{fontSize:"2rem"}} />
+                        <RightOutlined style={{ fontSize: "2rem" }} />
                     </div>
-                <h5 className="area-title">Tempat di kota {tempatName}</h5>
+                    <h5 className="area-title">Tempat di kota {tempatName}</h5>
 
                     <div className="picture-list">
                         {tempat && tempat.length > 0 ? (
@@ -389,20 +442,17 @@ const Home = () => {
                                 let nama = tempat.tempat;
                                 let url = JSON.parse(tempat.foto)[0];
                                 return (
-                                    
-                                <Link to={`/tempat/${tempat.id}`}>
-                                    <div
-                                        className="card"                                      
-                                    >                                        
-                                        <img
-                                            className="card-image"
-                                            src={url}
-                                            alt={nama+" foto"}
-                                        />
-                                        <div className="content">
-                                            <h4>{nama}</h4>
+                                    <Link to={`/tempat/${tempat.id}`}>
+                                        <div className="card">
+                                            <img
+                                                className="card-image"
+                                                src={url}
+                                                alt={nama + " foto"}
+                                            />
+                                            <div className="content">
+                                                <h4>{nama}</h4>
+                                            </div>
                                         </div>
-                                    </div>
                                     </Link>
                                 );
                             })
@@ -411,8 +461,6 @@ const Home = () => {
                         )}
                     </div>
                 </section>
-
-
             </div>
         </div>
     );

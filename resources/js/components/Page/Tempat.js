@@ -92,6 +92,7 @@ const Tempat = () => {
         Axios.get(`/data/tempat-detail/${id}`).then(resp => {
           
             setData(resp.data.data[0]);
+            // console.log(resp.data.data[0].kategori,"owaa");
         });
 
         Axios.defaults.xsrfHeaderName = "X-CSRFToken";
@@ -144,22 +145,21 @@ const Tempat = () => {
                     }
                 })
                     .then(response => {
-                        
+                     
                         if (response.data.status !== "failed") {
-
+                            
+                            console.log(response,"test");
                             if (response.data.status === "no_token") {
-                                // console.log(response.data.data);
-                                setTokenStatus(false);
-                                setDataReview(response.data.data);
-                                
+                                // setTokenStatus(false);
+                                setDataReview(response.data.data);                                
                             }
-                            else {
-                                setTokenStatus(true);
+                            else {                               
+                                // setTokenStatus(true);
                                 setDataReview(response.data.data);
                             }
                         }
                         else {              
-                                          
+                            console.log(response,"test");
                             setDataReview(response.data.data);
                         }
                     })
@@ -173,10 +173,7 @@ const Tempat = () => {
 
     const onCreate = (values) => {
         
-        if(!tokenStatus){
-            message.error("harap login terlebih dahulu");
-        }
-        else {
+        
 
         setVisible(false);
         Axios.defaults.xsrfHeaderName = "X-CSRFToken";
@@ -242,7 +239,7 @@ const Tempat = () => {
                 console.log("test", response);
             });
 
-        }
+        
 
 
     };
@@ -477,6 +474,10 @@ const Tempat = () => {
                             {data.hashtag.split(',').map(d =>
                                 <div className="tempat-tag-detail-detail">{d}</div>
                             )}
+                            {
+                            data.kategori.map(k=>
+                                <div className="tempat-tag-detail-detail">{k}</div>
+                            )}
                             
 
                         </div>
@@ -485,7 +486,7 @@ const Tempat = () => {
                 <section className="review-section">
                     <h4>Lihat Kata mereka yang <span className="pernahke">PernahKe</span> sini</h4>
                     <div style={{ textAlign: "left", width: "100%", paddingLeft: "3%" }}>
-                        {tokenStatus?<Button
+                        {token?<Button
                             type="primary"
                             onClick={() => {
                                 setVisible(true);

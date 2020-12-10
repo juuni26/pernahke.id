@@ -356,6 +356,30 @@ class pernahControl extends Controller
 
     }
 
+    public function listSearch(){
+        $item_hashtag = [];
+        $i=0;
+        $hashtag = Tempat::all()->pluck('hashtag')->toArray();
+        foreach($hashtag as $h){
+            $hash = explode(',',$h);
+            if(count($hash)>1){
+                foreach($hash as $h){
+                    $item_hashtag[] = $h;
+                }
+            } else{
+                $item_hashtag[] = $hash[0];
+            }
+        }
+        $kategori = Kategori::all()->pluck('kategori')->toArray();
+        $data = array_unique(array_merge($item_hashtag,$kategori));
+        if(count($data) >0){
+            return $this->respon('success','',(object)$data);
+        } else{
+            return $this->respon('success','Tidak ada data!',[]);
+        }
+
+    }
+
     public function like(request $req){
         if($req->token) {
             $cek = Session::cekToken($req->token);
@@ -513,7 +537,7 @@ class pernahControl extends Controller
         if(!$id) return $this->respon('failed','Tidak ada data!');
         $data = Review::where('tempats_id',$id)->get();
         $item = [];
-        if($data->isEmpty()) return $this->respon('failed','Tidak ada data!',$item);
+        if($data->isEmpty()) return $this->respon('success','Tidak ada data!',$item);
         
         $i=0;
         foreach($data as $d ){
