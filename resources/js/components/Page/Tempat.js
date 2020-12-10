@@ -448,6 +448,7 @@ const Tempat = () => {
 
                 <article className="tempat-section">
                     <div className="tempat-banner">
+                        <div className="tempat-bg"></div>
                         <img
                             className="tempat-image"
                             src={JSON.parse(data.foto)[0]}
@@ -457,8 +458,8 @@ const Tempat = () => {
 
                     <div className="tempat-like">
                         <div className="like">
-                            <HeartFilled style={likeState ? { display: "block", fontSize: "5rem", color: "red" } : { display: "none" }} onClick={() => { handleLike("minus"); }} />
-                            <HeartOutlined style={likeState ? { display: "none" } : { display: "block", fontSize: "5rem", color: "red" }} onClick={() => { handleLike("plus"); }} />
+                            <HeartFilled style={likeState ? { display: "block", fontSize: "4rem", color: "red" } : { display: "none" }} onClick={() => { handleLike("minus"); }} />
+                            <HeartOutlined style={likeState ? { display: "none" } : { display: "block", fontSize: "4rem", color: "red" }} onClick={() => { handleLike("plus"); }} />
                         </div>
                         <div className="desc">Like jika <span className="pengenke">PengenKe</span> sini<br /><i>{jumlahLike} orang <span className="pengenke">PengenKe</span> sini</i></div>
                         {/* <div className="rating"><Rate allowHalf defaultValue={5} style={{ background: "#fff" }} allowCle="false" /> </div> */}

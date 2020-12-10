@@ -175,43 +175,41 @@ const Home = () => {
                 </div>
                 <section className="search-result-list">
                     <div className="single-result">
-                        <h6>Ancol, Jakarta utara</h6>
+                        <Link to="/tempat/21">
+                        <h6>
+PULAU SERANGAN (KONSERVASI PENYU DAN KURA-KURA)</h6>
+</Link>
                         <div className="single-result-content">
-                            <img src="https://images.bisnis-cdn.com/posts/2020/06/30/1259392/bio-ancol-3.jpg" />
+                            <img src="https://img.inews.co.id/media/600/files/inews_new/2019/01/21/pantai_nglambor.jpg" />
                             <p>
-                                loremi ipsffafu afafkfkfkefkof efoekfoefkoefksa
-                                fkfa loremi ipsffafu afafkfkfkefkof
-                                efoekfoefkoefksa fkfa loremi ipsffafu
-                                afafkfkfkefkof efoekfoefkoefksa fkfa ...{" "}
-                                <span className="see-more">See more</span>
+                            Pulau Serangan terkenal dengan konservasi kura-kuranya. Di pulau ini pengunjung bisa berinteraksi langsung dengan kura-kura dan penyu hijau yang dilindungi. Konservasi ini juga kerap melakukan pelepasan kura-kura dan penyu ke laut yang menarik untuk disaksikan...
+                            <Link to="/tempat/21"><span className="see-more">See more</span></Link>
                             </p>
                         </div>
                     </div>
 
                     <div className="single-result">
-                        <h6>Ancol, Jakarta utara</h6>
+                    <Link to="/tempat/6">
+                        <h6>Pulau Weh</h6>
+                        </Link>
                         <div className="single-result-content">
-                            <img src="https://images.bisnis-cdn.com/posts/2020/06/30/1259392/bio-ancol-3.jpg" />
+                            <img src="https://i.ytimg.com/vi/a8e5WWqoSrQ/maxresdefault.jpg" />
                             <p>
-                                loremi ipsffafu afafkfkfkefkof efoekfoefkoefksa
-                                fkfa loremi ipsffafu afafkfkfkefkof
-                                efoekfoefkoefksa fkfa loremi ipsffafu
-                                afafkfkfkefkof efoekfoefkoefksa fkfa ...{" "}
-                                <span className="see-more">See more</span>
+                            Pulau Weh merupakan pulau vulkanik kecil yang masuk dalam Provinsi Aceh . Selain kekayaan alam di darat dan di laut, pulau ini juga memiliki peninggalan sejarah yang menarik untuk dijelajahi. Wisatawan tidak hanya dapat menikmati pesona alamnya, tetapi juga kekayaan budaya lokal yang ada. Dari pulau ini, perhitungan jarak dan lintas negara dimulai...
+                            <Link to="/tempat/6"><span className="see-more">See more</span></Link>
                             </p>
                         </div>
                     </div>
 
                     <div className="single-result">
-                        <h6>Ancol, Jakarta utara</h6>
+                    <Link to="/tempat/9">
+                        <h6>pulau lampuuk</h6>
+                        </Link>
                         <div className="single-result-content">
-                            <img src="https://images.bisnis-cdn.com/posts/2020/06/30/1259392/bio-ancol-3.jpg" />
+                            <img src="https://picture.triptrus.com/image/2014/06/pantai-lampuuk.jpeg" />
                             <p>
-                                loremi ipsffafu afafkfkfkefkof efoekfoefkoefksa
-                                fkfa loremi ipsffafu afafkfkfkefkof
-                                efoekfoefkoefksa fkfa loremi ipsffafu
-                                afafkfkfkefkof efoekfoefkoefksa fkfa ...{" "}
-                                <span className="see-more">See more</span>
+                            Pantai Lampuuk menjadi salah satu destinasi andalan di Aceh. Pantai ini memiliki banyak sekali keunggulan, seperti keindahan pasir putih yang bersih dan lembut, air laut yang memiliki warna biru kehijauan, deretan pohon pinus, background pegunungan, padang golf. Ditambah lagi, pengunjung bisa melakukan surfing dikarenakan ombak yang sangat mendukung...
+                            <Link to="/tempat/9"><span className="see-more">See more</span></Link>
                             </p>
                         </div>
                     </div>
@@ -240,7 +238,7 @@ const Home = () => {
                         <button className="samping-input">
                             <SearchOutlined />
                         </button>
-                        <datalist id="data">
+                        <datalist id="data" style={{width:"100%"}}>
                             { 
                             listSearch.length > 0
                                 ? listSearch.map(l => (
@@ -250,6 +248,7 @@ const Home = () => {
                         </datalist>
                     </form>
                 </div>
+                <div style={{textAlign:"left"}}><Link to="saran-inputan"><span className="sarantempat">Mau saranin tempat yang belum ada, klik disini !</span></Link></div>
 
                 <div className="btmm1">Bingung? Ayo explore Indonesia !</div>
 
@@ -365,7 +364,7 @@ const Home = () => {
                             cursor: "pointer"
                         }}
                         onClick={() => {
-                            window.location.reload();
+                        setSlider(1);
                         }}
                     >
                         <Button>Kembali ke Provinsi</Button>
@@ -423,10 +422,24 @@ const Home = () => {
                             cursor: "pointer"
                         }}
                         onClick={() => {
-                            window.location.reload();
+                            setSlider(2);
                         }}
                     >
-                        kembali ke provinsi
+                        <Button>Kembali ke Kota</Button>
+                    </div>
+                    <div
+                        style={{
+                            position: "absolute",
+                            left: "10vw",
+                            top: "2vh",
+                            fontSize: "1.2rem",
+                            cursor: "pointer"
+                        }}
+                        onClick={() => {
+                        setSlider(1);
+                        }}
+                    >
+                        <Button>Kembali ke Provinsi</Button>
                     </div>
                     <div className="leftDir" onClick={slideLeftKota}>
                         <LeftOutlined style={{ fontSize: "2rem" }} />

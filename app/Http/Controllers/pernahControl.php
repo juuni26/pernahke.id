@@ -373,6 +373,7 @@ class pernahControl extends Controller
         $kategori = Kategori::all()->pluck('kategori')->toArray();
         $data = array_unique(array_merge($item_hashtag,$kategori));
         if(count($data) >0){
+         sort($data);         
             return $this->respon('success','',(object)$data);
         } else{
             return $this->respon('success','Tidak ada data!',[]);

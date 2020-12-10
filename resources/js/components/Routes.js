@@ -5,6 +5,8 @@ import Home from "./Page/Home";
 // import Inputan from "./Main"
 
 import Tempat from "./Page/Tempat";
+import Saran from "./Page/Saran";
+
 
 
 import Login from "./User/Login";
@@ -44,6 +46,9 @@ const Routes = () => {
             </Route>
             <Route exact path="/tempat/:id">
                 <Tempat />
+            </Route>
+            <Route exact path="/saran-inputan">
+                <Saran/>s
             </Route>
             <Route exact path="/register">
                 <Register />
