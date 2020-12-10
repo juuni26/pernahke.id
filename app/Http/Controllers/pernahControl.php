@@ -13,6 +13,10 @@ use App\Tempat;
 use App\Kategori;
 use App\Session;
 use App\Orang;
+use App\PengenKe;
+use App\Review;
+use App\ReviewPoint;
+
 
 class pernahControl extends Controller
 {
@@ -32,9 +36,7 @@ class pernahControl extends Controller
     }
 
     public function tester(){
-        // $now = Carbon::now()->subDays(1);
-        // $noww = Carbon::now();
-        // dd($now->diffInSeconds($noww));
+        $data = PengenKe::find(1);
     }
 
     public function insProvinsi(request $req){
@@ -330,7 +332,7 @@ class pernahControl extends Controller
             'deskripsi'     => $data->deskripsi,
             'hashtag'       => $data->hashtag,
             'kota'          => $data->kotas->kota,
-            'kategori'      => $data->kategoris->pluck('kategori')->toArray() ,
+            'kategori'      => $data->kategoris->pluck('kategori')->toArray(),
         ];
         return $this->respon('success','Berikut detail tempat '.strtoupper($data->tempat),$item);
 
@@ -364,7 +366,7 @@ class pernahControl extends Controller
             if($update == 'no'){
                 return $this->respon('failed','Anda harus login ulang!');
             }
-            $token = $req->token;
+            $token = $update;
         } else{
             return $this->respon('failed','Anda harus login terlebih dahulu!');
         }
@@ -381,13 +383,166 @@ class pernahControl extends Controller
             return $this->respon('failed','Gagal like tempat!');
         } else {
             if($status == 'active'){
-                return $this->respon('success','Semoga anda bisa kesini!');
+                return $this->respon('success','Semoga anda bisa kesini!','',$token);
             } else {
-                return $this->respon('success','Mengapa anda tidak mau kesini?');
+                return $this->respon('success','Mengapa anda tidak mau kesini?','',$token);
             }
         }
 
 
     }
+
+    public function getPengenke(request $req){
+        if($req->token) {
+            $cek = Session::cekToken($req->token);
+            if($cek == 'no'){
+                return $this->respon('failed','Waktu login anda habis!');
+            } 
+            $update = Session::updateToken($req->token);
+            if($update == 'no'){
+                return $this->respon('failed','Anda harus login ulang!');
+            }
+            $token = $update;
+        } else{
+            return $this->respon('failed','Anda harus login terlebih dahulu!');
+        }
+
+        $data = Pengenke::where('orangs_id',decrypt($req->token))->where('tempats_id',$req->tempat)->first();
+        $count = PengenKe::where('tempats_id',$req->tempat)->where('status',1)->count();
+        if($data){
+            $item = [
+                'status' => $data->status,
+                'total'  => $count,
+            ];
+            $item = (object)$item;
+        } else {
+            $item = [];
+            $item = (object)$item;
+        }
+        if($data){
+            return $this->respon('success','',$item,$token);
+        } else{
+            return $this->respon('failed','Tidak bisa kesini!');
+        }
+    }
+
+    public function review(request $req){
+        if($req->token) {
+            $cek = Session::cekToken($req->token);
+            if($cek == 'no'){
+                return $this->respon('failed','Waktu login anda habis!');
+            } 
+            $update = Session::updateToken($req->token);
+            if($update == 'no'){
+                return $this->respon('failed','Anda harus login ulang!');
+            }
+            $token = $update;
+        } else{
+            return $this->respon('failed','Anda harus login terlebih dahulu!');
+        }
+
+
+        $review = $req->review;
+        $orang_id = decrypt($token);
+        $rating = $req->rating;
+        $foto = $req->foto;
+        $tempat_id = $req->tempat;
+
+        if(!$review || !$tempat_id){
+            return $this->respon('failed','Masukkan review anda!');
+        }
+
+        $ins = Review::ins($orang_id,$review,$tempat_id);
+        if($ins == 'yes'){
+            return $this->respon('success','Terima kasih atas sharing anda!','',$token);
+        } else {
+            return $this->respon('failed','Gagal sharing!');
+        }
+
+    }
+
+    public function reviewPoint(request $req){
+        if($req->token) {
+            $cek = Session::cekToken($req->token);
+            if($cek == 'no'){
+                return $this->respon('failed','Waktu login anda habis!');
+            } 
+            $update = Session::updateToken($req->token);
+            if($update == 'no'){
+                return $this->respon('failed','Anda harus login ulang!');
+            }
+            $token = $update;
+        } else{
+            return $this->respon('failed','Anda harus login terlebih dahulu!');
+        }
+
+        $vote = $req->vote;
+        $review_id = $req->review_id;
+        if(!$vote){
+            return $this->respon('failed','Anda belum vote!');
+        }
+
+        $ins = ReviewPoint::ins(decrypt($token),$vote,$review_id);
+        if($ins == 'yes'){
+            return $this->respon('success','Terima kasih atas vote anda!');
+        } else {
+            return $this->respon('failed','Gagal vote!');
+        }
+    }
+
+    public function getReview(request $req){
+        $id = $req->tempat;
+        if($req->token) {
+            $cek = Session::cekToken($req->token);
+            if($cek == 'no'){
+                return $this->respon('failed','Waktu login anda habis!');
+            } 
+            $update = Session::updateToken($req->token);
+            if($update == 'no'){
+                return $this->respon('failed','Anda harus login ulang!');
+            }
+            $token = $update;
+        } else {
+            return $this->respon('no_token');
+        }
+        $orang = decrypt($req->token);
+        
+
+
+
+        if(!$id) return $this->respon('failed','Tidak ada data!');
+        $data = Review::where('tempats_id',$id)->get();
+        $item = [];
+        if($data->isEmpty()) return $this->respon('failed','Tidak ada data!',$item);
+        
+        $i=0;
+        foreach($data as $d ){
+            $total = ReviewPoint::where('reviews_id',$d->id)->sum('review_point');
+            $vote = ReviewPoint::where('reviews_id',$d->id)->where('orangs_id',$orang)->first();
+            if($vote){
+                $vote = $vote->review_point;
+                if($vote == 1) $vote = 'up';
+                else if($vote == -1) $vote = 'down';
+                else $vote = 'nothing';
+            }
+            $item[$i] = [
+                'id'                => $d->id,
+                'nama'              => $d->orangs->nama,
+                'asal'              => $d->orangs->tempat_tinggal,
+                'foto'              => $d->orangs->foto,
+                'review'            => $d->review,
+                'vote'              => $vote,
+                'total'             => $total,
+            ];
+            $i++;
+        }
+        if(count($item) > 0){
+            return $this->respon('success','',($item));
+        } else {
+            $item = [];
+            return $this->respon('failed','Tidak dapat mengambil data!',$item);
+        }
+    }
+
 
 }

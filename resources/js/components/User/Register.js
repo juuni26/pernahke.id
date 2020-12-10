@@ -53,6 +53,12 @@ const RegistrationForm = () => {
   const [form] = Form.useForm();
   const [redirect,setRedirect] = useState(null);
 
+
+  useEffect(()=>{
+    window.scrollTo(0, 0);
+
+});
+
   const onFinish = ({name,password,email,alamat,phone,ktp}) => {
     // console.log('Received values of form: ', values);
 
@@ -200,7 +206,7 @@ return  <Redirect to='/login'/>
           name="alamat"
           label={
             <span>
-              Tempat tinggal
+              Asal
             </span>
           }
           rules={[{ required: true, message: 'Please input your place!', whitespace: true }]}

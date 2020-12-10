@@ -13,6 +13,12 @@ const Login = () => {
     const [redirect, setRedirect] = useState(null);
     const { token, setToken, setUser, user } = useContext(BaseContext);
 
+
+    useEffect(()=>{
+        window.scrollTo(0, 0);
+
+    });
+
     const onFinish = ({ email, password }) => {
         Axios.defaults.xsrfHeaderName = "X-CSRFToken";
 
