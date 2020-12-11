@@ -272,7 +272,7 @@ class pernahControl extends Controller
             'data' => $data,
         ]);
     }
-    
+
     public function getTempat(){
         $data = Tempat::all();
         foreach($data as $d){
@@ -364,7 +364,7 @@ class pernahControl extends Controller
         if(!$id) return $this->respon('failed','Provinsi tidak ditemukan!');
         $kota = Kota::where('provinsis_id',$id)->get();
         $provinsi = Provinsi::find($id);
-        if($kota->isEmpty()) return $this->respon('failed','Provinsi tidak ditemukan!');
+        if($kota->isEmpty()) return $this->respon('failed','Kota tidak ditemukan!');
         return $this->respon('success','Berikut kota yang ada di provinsi '.strtoupper($provinsi),$kota);
     }
 
