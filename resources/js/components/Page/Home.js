@@ -493,7 +493,7 @@ PULAU SERANGAN (KONSERVASI PENYU DAN KURA-KURA)</h6>
                     <div className="rightDir" onClick={slideRightKota}>
                         <RightOutlined style={{ fontSize: "2rem" }} />
                     </div>
-                    <h5 className="area-title">Tempat di kota {tempatName}</h5>
+                    <h5 className="area-title">Tempat di {tempatName}</h5>
 
                     <div className="picture-list">
                         {tempat && tempat.length > 0 ? (
