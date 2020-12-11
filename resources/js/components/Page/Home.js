@@ -57,8 +57,55 @@ const Home = () => {
     const [tempatName, setTempatName] = useState("");
 
     const [gerak, setGerak] = useState(null);
+    // state search
+
     const [searchState, setSearchState] = useState(null);
     const [listSearch, setListSearch] = useState([]);
+    
+    const [searchResult,setSearchResult] = useState([]);
+    const [searchValue,setSearchValue] = useState(null);
+
+    const handleChange = e =>{
+        setSearchValue(e.target.value);        
+    }
+
+    const handleSearch = e => {
+        e.preventDefault();  
+        if(searchValue){
+         
+
+            Axios.defaults.xsrfHeaderName = "X-CSRFToken";
+
+            var bodyFormData = new FormData();
+            bodyFormData.append("search", searchValue);
+        
+            Axios({
+                method: "post",
+                url: "/search",
+                data: bodyFormData,
+                headers: {            
+                    "X-CSRF-TOKEN": csrf_token
+                }
+            })
+                .then(response => {
+                  console.log(response);
+                    if (response.data.status === "failed") {
+                        message.error(response.data.message);
+                    } else {
+                        setSearchResult(response.data.data);
+                        setSearchState(true);
+                    }
+
+                })
+                .catch(function (response) {
+                    console.log(response);
+                });
+            
+        }
+        
+    };
+
+//  end search
 
     const slideLeft = () => {
         // let newSlider = +slider - 1 === 0 ? 3 : slider - 1;
@@ -96,11 +143,7 @@ const Home = () => {
         setKotaSlide(newSlider);
     };
 
-    const handleSearch = e => {
-        e.preventDefault();
-        setSearchState(true);
-    };
-
+    
     const handleToKota = (id, provinsi_nama) => {
         Axios.get(`/data/kota-provinsi/${id}`).then(response => {
             if (response.data.status === "failed") {
@@ -168,12 +211,14 @@ const Home = () => {
                 <div
                     className="top-leftt"
                     onClick={() => {
-                        setSearchState(null);
+                        setSearchState(null);                        
                     }}
                 >
                     <CloseOutlined />
                 </div>
                 <section className="search-result-list">
+
+                    
                     <div className="single-result">
                         <Link to="/tempat/21">
                         <h6>
@@ -234,6 +279,7 @@ PULAU SERANGAN (KONSERVASI PENYU DAN KURA-KURA)</h6>
                             placeholder={placeholder}
                             list="data"
                             autoComplete="off"
+                            onChange={handleChange}
                         />
                         <button className="samping-input">
                             <SearchOutlined />

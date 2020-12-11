@@ -341,12 +341,13 @@ class pernahControl extends Controller
     public function getSearch(request $req){
         
         $search = $req->search;
-        $explode = explode($search);
+        $explode = explode(" ",$search);
         if($search){
             foreach($explode as $d){
                 $kata = '%'.$d.'%';
-                $item = Tempat::where('hashtag','like',$kata)->get();
+                $item = Tempat::where('hashtag','like',$kata)->orWhere('tempat','like',$kata)->get();
                 $item = $item->merge($item);
+                
             }
         } else {
             $item = Tempat::all();

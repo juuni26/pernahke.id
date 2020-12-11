@@ -33,6 +33,7 @@ route::post('pengenke','pernahControl@getPengenKe');
 route::post('review','pernahControl@review');
 route::post('reviewvote','pernahControl@reviewPoint');
 route::post('data/review','pernahControl@getReview');
+route::post('search','pernahControl@getSearch');
 
 route::get('data/provinsi','pernahControl@getProvinsi');
 route::get('data/kota','pernahControl@getKota');
@@ -41,6 +42,5 @@ route::get('data/kategori','pernahControl@getKategori');
 route::get('/data/kota-provinsi/{id}','pernahControl@getKotaP');
 route::get('/data/kota-tempat/{id}','pernahControl@getTempatK');
 route::get('/data/tempat-detail/{id}','pernahControl@getTempatD');
-route::get('search','pernahControl@getSearch');
 route::get('data/listsearch','pernahControl@listSearch');
 

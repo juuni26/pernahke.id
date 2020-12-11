@@ -16,7 +16,6 @@ import "./App.scss";
 import Axios from "axios";
 import Logo from './pernahke.png'
 
-// import HeaderLayout from "./UserAccount/Header";
 const { Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
