@@ -28,8 +28,8 @@ class AlterSaranTempat extends Migration
     public function down()
     {
         Schema::table('sarans_tempats', function (Blueprint $table) {
-            $table->string('gmaps');
-            $table->string('deskripsi');
+            $table->string('gmaps')->change();
+            $table->string('deskripsi')->change();
         });
     }
 }
