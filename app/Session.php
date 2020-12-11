@@ -60,7 +60,7 @@ class Session extends Model
             $waktu = Carbon::parse($token->waktu);
         }
         $now = Carbon::now();
-        if($waktu->diffInMinutes($now) >= 30){
+        if($waktu->diffInDays($now) >= 1){
             return 'no';
         } else {
             $token->save();
