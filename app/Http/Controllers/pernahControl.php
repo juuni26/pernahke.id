@@ -16,6 +16,7 @@ use App\Orang;
 use App\PengenKe;
 use App\Review;
 use App\ReviewPoint;
+use App\SaranTempat;
 
 
 class pernahControl extends Controller
@@ -36,7 +37,7 @@ class pernahControl extends Controller
     }
 
     public function tester(){
-        $data = PengenKe::find(1);
+        // $data = PengenKe::find(1);
     }
 
     public function insProvinsi(request $req){
@@ -173,6 +174,68 @@ class pernahControl extends Controller
 
     }
 
+    public function saranTempat(request $req){
+        if($req->token) {
+            $cek = Session::cekToken($req->token);
+            if($cek == 'no'){
+                return $this->respon('expired','Waktu login anda habis!');
+            } 
+            $update = Session::updateToken($req->token);
+            if($update == 'no'){
+                return $this->respon('expired','Anda harus login ulang!');
+            }
+            $token = $update;
+        } else{
+            return $this->respon('expired','Anda harus login terlebih dahulu!');
+        }
+
+        if(!$req->kota){
+            return $this->respon('failed','Kota tidak boleh kosong!');
+        } else{
+            $kota = $req->kota;
+        }
+        if(!$req->tempat){
+            return $this->respon('failed','Tempat tidak boleh kosong!');
+        } else{
+            $tempat = $req->tempat;
+        }
+
+        if(!$req->alamat){
+            return $this->respon('failed','Alamat tidak boleh kosong!');
+        }else{
+            $alamat = $req->alamat;
+        }
+
+        if(!$req->deskripsi){
+            return $this->respon('failed','Deskripsi tidak boleh kosong!');
+        }else{
+            $deskripsi = $req->deskripsi;
+        }
+
+        if(!$req->kategori){
+            return $this->respon('failed','Kategori tidak boleh kosong!');
+        }else{
+            $kategori = $req->kategori;
+        }
+
+        // if(!$req->gmaps){
+        //     $gmaps = $req->gmaps;
+        // }else{
+        //     $gmaps = $req->gmaps;
+        // }
+        $gmaps = null;
+
+
+        $ins = SaranTempat::ins(decrypt($token),$kota,$tempat,$alamat,$deskripsi,$kategori,$gmaps);
+        if($ins == 'no') {
+            return $this->respon('failed','Gagal memasukkan tempat!');
+        } else {
+            return $this->respon('success','Terima kasih atas saran tempat yang kamu masukkan!','',$token);
+        }
+
+
+    }
+
     public function insKategori(request $req){
         if(!$req->kategori){
             return $this->respon('failed','kategori tidak boleh kosong!');
@@ -209,6 +272,7 @@ class pernahControl extends Controller
             'data' => $data,
         ]);
     }
+    
     public function getTempat(){
         $data = Tempat::all();
         foreach($data as $d){
@@ -308,7 +372,7 @@ class pernahControl extends Controller
         if(!$id) return $this->respon('failed','Kota tidak ditemukan!');
         $tempat = Tempat::where('kotas_id',$id)->get();
         $kota = Kota::find($id);
-        if($tempat->isEmpty()) return $this->respon('failed','Kota tidak ditemukan!');
+        if($tempat->isEmpty()) return $this->respon('failed','Tempat wisata belum ada!');
         return $this->respon('success','Berikut tempat yang ada di kota '.strtoupper($kota),$tempat);
     }
 
@@ -386,15 +450,15 @@ class pernahControl extends Controller
         if($req->token) {
             $cek = Session::cekToken($req->token);
             if($cek == 'no'){
-                return $this->respon('failed','Waktu login anda habis!');
+                return $this->respon('expired','Waktu login anda habis!');
             } 
             $update = Session::updateToken($req->token);
             if($update == 'no'){
-                return $this->respon('failed','Anda harus login ulang!');
+                return $this->respon('expired','Anda harus login ulang!');
             }
             $token = $update;
         } else{
-            return $this->respon('failed','Anda harus login terlebih dahulu!');
+            return $this->respon('expired','Anda harus login terlebih dahulu!');
         }
         if(!$req->tempat){
             return $this->respon('failed','Tidak ada tempat yang dipilih!');
@@ -422,15 +486,15 @@ class pernahControl extends Controller
         if($req->token) {
             $cek = Session::cekToken($req->token);
             if($cek == 'no'){
-                return $this->respon('failed','Waktu login anda habis!');
+                return $this->respon('expired','Waktu login anda habis!');
             } 
             $update = Session::updateToken($req->token);
             if($update == 'no'){
-                return $this->respon('failed','Anda harus login ulang!');
+                return $this->respon('expired','Anda harus login ulang!');
             }
             $token = $update;
         } else{
-            return $this->respon('failed','Anda harus login terlebih dahulu!');
+            return $this->respon('expired','Anda harus login terlebih dahulu!');
         }
 
         $data = Pengenke::where('orangs_id',decrypt($req->token))->where('tempats_id',$req->tempat)->first();
@@ -456,15 +520,15 @@ class pernahControl extends Controller
         if($req->token) {
             $cek = Session::cekToken($req->token);
             if($cek == 'no'){
-                return $this->respon('failed','Waktu login anda habis!');
+                return $this->respon('expired','Waktu login anda habis!');
             } 
             $update = Session::updateToken($req->token);
             if($update == 'no'){
-                return $this->respon('failed','Anda harus login ulang!');
+                return $this->respon('expired','Anda harus login ulang!');
             }
             $token = $update;
         } else{
-            return $this->respon('failed','Anda harus login terlebih dahulu!');
+            return $this->respon('expired','Anda harus login terlebih dahulu!');
         }
 
 
@@ -491,15 +555,15 @@ class pernahControl extends Controller
         if($req->token) {
             $cek = Session::cekToken($req->token);
             if($cek == 'no'){
-                return $this->respon('failed','Waktu login anda habis!');
+                return $this->respon('expired','Waktu login anda habis!');
             } 
             $update = Session::updateToken($req->token);
             if($update == 'no'){
-                return $this->respon('failed','Anda harus login ulang!');
+                return $this->respon('expired','Anda harus login ulang!');
             }
             $token = $update;
         } else{
-            return $this->respon('failed','Anda harus login terlebih dahulu!');
+            return $this->respon('expired','Anda harus login terlebih dahulu!');
         }
 
         $vote = $req->vote;
@@ -521,11 +585,11 @@ class pernahControl extends Controller
         if($req->token) {
             $cek = Session::cekToken($req->token);
             if($cek == 'no'){
-                return $this->respon('failed','Waktu login anda habis!');
+                return $this->respon('expired','Waktu login anda habis!');
             } 
             $update = Session::updateToken($req->token);
             if($update == 'no'){
-                return $this->respon('failed','Anda harus login ulang!');
+                return $this->respon('expired','Anda harus login ulang!');
             }
             $token = $update;
         } else {
