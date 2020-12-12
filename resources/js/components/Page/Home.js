@@ -61,34 +61,38 @@ const Home = () => {
 
     const [searchState, setSearchState] = useState(null);
     const [listSearch, setListSearch] = useState([]);
-    
-    const [searchResult,setSearchResult] = useState([]);
-    const [searchValue,setSearchValue] = useState(null);
 
-    const handleChange = e =>{
-        setSearchValue(e.target.value);        
+    const [searchResult, setSearchResult] = useState([]);
+    const [searchValue, setSearchValue] = useState(null);
+
+    const [searchPage,setSearchPage] = useState(1);
+    
+
+
+    const handleChange = e => {
+        setSearchValue(e.target.value);
     }
 
     const handleSearch = e => {
-        e.preventDefault();  
-        if(searchValue){
-         
+        e.preventDefault();
+        if (searchValue) {
+
 
             Axios.defaults.xsrfHeaderName = "X-CSRFToken";
 
             var bodyFormData = new FormData();
             bodyFormData.append("search", searchValue);
-        
+
             Axios({
                 method: "post",
                 url: "/search",
                 data: bodyFormData,
-                headers: {            
+                headers: {
                     "X-CSRF-TOKEN": csrf_token
                 }
             })
                 .then(response => {
-                  console.log(response);
+                    console.log(response);
                     if (response.data.status === "failed") {
                         message.error(response.data.message);
                     } else {
@@ -100,12 +104,25 @@ const Home = () => {
                 .catch(function (response) {
                     console.log(response);
                 });
-            
+
         }
-        
+
     };
 
-//  end search
+    const prevSearch = ()=>{
+        if(searchResult.length>3 && searchPage!== 1 ){
+            setSearchPage(searchPage-1);
+        }       
+    };
+
+    const nextSearch = ()=>{
+        if(searchResult.length>3 && searchPage !== Math.ceil(searchResult.length/3)  ){
+            setSearchPage(searchPage+1);
+        }     
+
+    };
+
+    //  end search
 
     const slideLeft = () => {
         // let newSlider = +slider - 1 === 0 ? 3 : slider - 1;
@@ -143,7 +160,7 @@ const Home = () => {
         setKotaSlide(newSlider);
     };
 
-    
+
     const handleToKota = (id, provinsi_nama) => {
         Axios.get(`/data/kota-provinsi/${id}`).then(response => {
             if (response.data.status === "failed") {
@@ -174,11 +191,11 @@ const Home = () => {
                 setProvinsi(response.data.data);
                 localStorage.setItem("provinsi", "true");
             })
-            .then(() => {});
+            .then(() => { });
 
         Axios.get("/data/listsearch").then(response => {
             if (response.data.message !== "failed") {
-                
+
                 // var obj = {"1":5,"2":7,"3":0,"4":0,"5":0,"6":0,"7":0,"8":0,"9":0,"10":0,"11":0,"12":0}
                 let result = Object.keys(response.data.data).map((key) => response.data.data[key]);
                 setListSearch(result);
@@ -191,7 +208,7 @@ const Home = () => {
         let txtLen = txt.length;
         setPlaceholder("|");
         let i = 0;
-        let itt = setInterval(function() {
+        let itt = setInterval(function () {
             if (+i == txtLen) {
                 setPlaceholder(txt);
                 clearTimeout(itt);
@@ -211,59 +228,59 @@ const Home = () => {
                 <div
                     className="top-leftt"
                     onClick={() => {
-                        setSearchState(null);                        
+                        setSearchState(null);
                     }}
                 >
                     <CloseOutlined />
                 </div>
                 <section className="search-result-list">
 
-                    
-                    <div className="single-result">
-                        <Link to="/tempat/21">
-                        <h6>
-PULAU SERANGAN (KONSERVASI PENYU DAN KURA-KURA)</h6>
-</Link>
-                        <div className="single-result-content">
-                            <img src="https://img.inews.co.id/media/600/files/inews_new/2019/01/21/pantai_nglambor.jpg" />
-                            <p>
-                            Pulau Serangan terkenal dengan konservasi kura-kuranya. Di pulau ini pengunjung bisa berinteraksi langsung dengan kura-kura dan penyu hijau yang dilindungi. Konservasi ini juga kerap melakukan pelepasan kura-kura dan penyu ke laut yang menarik untuk disaksikan...
-                            <Link to="/tempat/21"><span className="see-more">See more</span></Link>
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="single-result">
-                    <Link to="/tempat/6">
-                        <h6>Pulau Weh</h6>
-                        </Link>
-                        <div className="single-result-content">
-                            <img src="https://i.ytimg.com/vi/a8e5WWqoSrQ/maxresdefault.jpg" />
-                            <p>
-                            Pulau Weh merupakan pulau vulkanik kecil yang masuk dalam Provinsi Aceh . Selain kekayaan alam di darat dan di laut, pulau ini juga memiliki peninggalan sejarah yang menarik untuk dijelajahi. Wisatawan tidak hanya dapat menikmati pesona alamnya, tetapi juga kekayaan budaya lokal yang ada. Dari pulau ini, perhitungan jarak dan lintas negara dimulai...
-                            <Link to="/tempat/6"><span className="see-more">See more</span></Link>
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="single-result">
-                    <Link to="/tempat/9">
-                        <h6>pulau lampuuk</h6>
-                        </Link>
-                        <div className="single-result-content">
-                            <img src="https://picture.triptrus.com/image/2014/06/pantai-lampuuk.jpeg" />
-                            <p>
-                            Pantai Lampuuk menjadi salah satu destinasi andalan di Aceh. Pantai ini memiliki banyak sekali keunggulan, seperti keindahan pasir putih yang bersih dan lembut, air laut yang memiliki warna biru kehijauan, deretan pohon pinus, background pegunungan, padang golf. Ditambah lagi, pengunjung bisa melakukan surfing dikarenakan ombak yang sangat mendukung...
-                            <Link to="/tempat/9"><span className="see-more">See more</span></Link>
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="leftt">
+                    {
+                        searchResult.length > 0 ?
+                        // check datanya
+                            searchResult.length<3? searchResult.map(data => {
+                                return (
+                                    <div className="single-result">
+                                        <Link to={`/tempat/${data.id}`}>
+                                            <h6>
+                                                {data.tempat}</h6>
+                                        </Link>
+                                        <div className="single-result-content">
+                                            <img src={JSON.parse(data.foto)[0]} />
+                                            <p>
+                                               {data.deskripsi&&data.deskripsi.length>200?data.deskripsi.split('').slice(0,200).join('')+'...':data.deskripsi}
+                            <Link to={`/tempat/${data.id}`}><span className="see-more">See more</span></Link>
+                                            </p>
+                                        </div>
+                                    </div>)
+                            }
+                            ): 
+                            // searchresult lebih dari 3
+                            searchResult.slice(searchPage*3-3,searchPage*3).map(data => {
+                                return (
+                                    <div className="single-result">
+                                        <Link to={`/tempat/${data.id}`}>
+                                            <h6>
+                                                {data.tempat}</h6>
+                                        </Link>
+                                        <div className="single-result-content">
+                                            <img src={JSON.parse(data.foto)[0]} />
+                                            <p>
+                                               {data.deskripsi&&data.deskripsi.length>200?data.deskripsi.split('').slice(0,200).join('')+'...':data.deskripsi}
+                            <Link to={`/tempat/${data.id}`}><span className="see-more">See more</span></Link>
+                                            </p>
+                                        </div>
+                                    </div>)
+                            }
+                            )                                                           
+                            : "Search not found, try other keyword !"
+                    }
+                   
+                    <div className="leftt" onClick={prevSearch}>
                         <ArrowLeftOutlined /> Sebelumnya
                     </div>
-                    <div className="middlee">Halaman 1</div>
-                    <div className="rightt">
+                <div className="middlee">{searchPage} dari {searchResult.length>3? Math.ceil(searchResult.length/3):"1"} halaman </div>
+                    <div className="rightt" onClick={nextSearch}>
                         Selanjutnya <ArrowRightOutlined />
                     </div>
                 </section>
@@ -284,17 +301,17 @@ PULAU SERANGAN (KONSERVASI PENYU DAN KURA-KURA)</h6>
                         <button className="samping-input">
                             <SearchOutlined />
                         </button>
-                        <datalist id="data" style={{width:"100%"}}>
-                            { 
-                            listSearch.length > 0
-                                ? listSearch.map(l => (
-                                      <option value={l}>{l}</option>
-                                  ))
-                                : ""}
+                        <datalist id="data" style={{ width: "100%" }}>
+                            {
+                                listSearch.length > 0
+                                    ? listSearch.map(l => (
+                                        <option value={l}>{l}</option>
+                                    ))
+                                    : ""}
                         </datalist>
                     </form>
                 </div>
-                <div style={{textAlign:"left"}}><Link to="saran-inputan"><span className="sarantempat">Mau saranin tempat yang belum ada, klik disini !</span></Link></div>
+                <div style={{ textAlign: "left" }}><Link to="saran-inputan"><span className="sarantempat">Mau saranin tempat yang belum ada, klik disini !</span></Link></div>
 
                 <div className="btmm1">Bingung? Ayo explore Indonesia !</div>
 
@@ -328,70 +345,70 @@ PULAU SERANGAN (KONSERVASI PENYU DAN KURA-KURA)</h6>
                     <div className="picture-list">
                         {provinsi && provinsi.length > 0 ? (
                             provinsiSlide ===
-                            Math.ceil(provinsi.length / 10) ? (
-                                provinsi
-                                    .slice(
-                                        +provinsiSlide * 10 - 10,
-                                        +provinsi.length
-                                    )
-                                    .map(provinsi => {
-                                        let nama = provinsi.provinsi;
-                                        let url = JSON.parse(provinsi.foto)[0];
-                                        return (
-                                            <div
-                                                className="card"
-                                                onClick={() => {
-                                                    handleToKota(
-                                                        provinsi.id,
-                                                        provinsi.provinsi
-                                                    );
-                                                }}
-                                            >
-                                                <img
-                                                    className="card-image"
-                                                    src={url}
-                                                    alt={url}
-                                                />
-                                                <div className="content">
-                                                    <h4>{nama}</h4>
+                                Math.ceil(provinsi.length / 10) ? (
+                                    provinsi
+                                        .slice(
+                                            +provinsiSlide * 10 - 10,
+                                            +provinsi.length
+                                        )
+                                        .map(provinsi => {
+                                            let nama = provinsi.provinsi;
+                                            let url = JSON.parse(provinsi.foto)[0];
+                                            return (
+                                                <div
+                                                    className="card"
+                                                    onClick={() => {
+                                                        handleToKota(
+                                                            provinsi.id,
+                                                            provinsi.provinsi
+                                                        );
+                                                    }}
+                                                >
+                                                    <img
+                                                        className="card-image"
+                                                        src={url}
+                                                        alt={url}
+                                                    />
+                                                    <div className="content">
+                                                        <h4>{nama}</h4>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        );
-                                    })
-                            ) : (
-                                provinsi
-                                    .slice(
-                                        +provinsiSlide * 10 - 10,
-                                        +provinsiSlide * 10
-                                    )
-                                    .map(provinsi => {
-                                        let nama = provinsi.provinsi;
-                                        let url = JSON.parse(provinsi.foto)[0];
-                                        return (
-                                            <div
-                                                className="card"
-                                                onClick={() => {
-                                                    handleToKota(
-                                                        provinsi.id,
-                                                        provinsi.provinsi
-                                                    );
-                                                }}
-                                            >
-                                                <img
-                                                    className="card-image"
-                                                    src={url}
-                                                    alt={url}
-                                                />
-                                                <div className="content">
-                                                    <h4>{nama}</h4>
+                                            );
+                                        })
+                                ) : (
+                                    provinsi
+                                        .slice(
+                                            +provinsiSlide * 10 - 10,
+                                            +provinsiSlide * 10
+                                        )
+                                        .map(provinsi => {
+                                            let nama = provinsi.provinsi;
+                                            let url = JSON.parse(provinsi.foto)[0];
+                                            return (
+                                                <div
+                                                    className="card"
+                                                    onClick={() => {
+                                                        handleToKota(
+                                                            provinsi.id,
+                                                            provinsi.provinsi
+                                                        );
+                                                    }}
+                                                >
+                                                    <img
+                                                        className="card-image"
+                                                        src={url}
+                                                        alt={url}
+                                                    />
+                                                    <div className="content">
+                                                        <h4>{nama}</h4>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        );
-                                    })
-                            )
+                                            );
+                                        })
+                                )
                         ) : (
-                            <Skeleton />
-                        )}
+                                <Skeleton />
+                            )}
                     </div>
                 </section>
 
@@ -410,7 +427,7 @@ PULAU SERANGAN (KONSERVASI PENYU DAN KURA-KURA)</h6>
                             cursor: "pointer"
                         }}
                         onClick={() => {
-                        setSlider(1);
+                            setSlider(1);
                         }}
                     >
                         <Button>Kembali ke Provinsi</Button>
@@ -447,8 +464,8 @@ PULAU SERANGAN (KONSERVASI PENYU DAN KURA-KURA)</h6>
                                 );
                             })
                         ) : (
-                            <Skeleton />
-                        )}
+                                <Skeleton />
+                            )}
                     </div>
                 </section>
 
@@ -482,7 +499,7 @@ PULAU SERANGAN (KONSERVASI PENYU DAN KURA-KURA)</h6>
                             cursor: "pointer"
                         }}
                         onClick={() => {
-                        setSlider(1);
+                            setSlider(1);
                         }}
                     >
                         <Button>Kembali ke Provinsi</Button>
@@ -516,8 +533,8 @@ PULAU SERANGAN (KONSERVASI PENYU DAN KURA-KURA)</h6>
                                 );
                             })
                         ) : (
-                            <Skeleton />
-                        )}
+                                <Skeleton />
+                            )}
                     </div>
                 </section>
             </div>

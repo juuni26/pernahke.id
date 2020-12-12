@@ -27,6 +27,7 @@ const LayoutContent = props => {
     return (
         <div className="layoutt">
             <nav className="navbarr">
+
                 <div className="logo">
                     <Link to="/">
                         <img src={Logo} />
@@ -38,6 +39,8 @@ const LayoutContent = props => {
                         <p style={{fontStyle:"italic"}}>Tempat sharing pengalaman wisata di Indonesia </p>
                     </div>
                 </div>
+
+                
                 <div className="userr">
                     <ul>
                         {token ? (
