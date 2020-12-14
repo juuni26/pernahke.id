@@ -37,22 +37,13 @@ class pernahControl extends Controller
     }
 
     public function tester(){
-        // $data = PengenKe::find(1);
+        // $caridataygmax = ReviewPoint::groupBy('reviews_id')->get();
+        // dd($caridataygmax);
+        // $reviewdatamax = $caridataygmax->reviews-;
     }
 
     public function insProvinsi(request $req){
 
-        // if(!$req->token){
-        //     return $this->respon('failed','Session habis!');
-        // } else {
-        //     $token = Session::update($req->token);
-        //     if($token == 'no'){
-        //         return $this->respon('failed','Session bermasalah!');
-        //     } else {
-                
-        //     }
-
-        // }
 
         if(!$req->nama_provinsi){
             return $this->respon('failed','Provinsi tidak boleh kosong!');
@@ -186,8 +177,9 @@ class pernahControl extends Controller
             }
             $token = $update;
         } else{
-            return $this->respon('expired','Anda harus login terlebih dahulu!');
+            return $this->respon('failed','Anda harus login terlebih dahulu!');
         }
+
 
         if(!$req->kota){
             return $this->respon('failed','Kota tidak boleh kosong!');
@@ -336,10 +328,13 @@ class pernahControl extends Controller
             $telepon = $req->no_telp;
             $ktp = $req->ktp;
         }
-
+        $unique = Orang::where('email',$email)->first();
+        if($unique){
+            return $this->respon('failed','Email sudah ada!');
+        }
         $ins = Orang::register($nama,$email,$password,$tempat_tinggal,$telepon,$ktp);
         if($ins == 'no'){
-            return $this->respon('failed','Gagal register!');
+            return $this->respon('failed','Gagal register!\n Terdapat kesalahan!');
         } else{
             return $this->respon('success','Berhasil melakukan register, Silahkan melakukan login!');            
         }
@@ -349,6 +344,11 @@ class pernahControl extends Controller
     public function logout(request $req){
         if(!$req->token) return $this->respon('failed','Gagal logout!');
         $token = $req->token;
+        try{
+            $tes = decrypt($token);
+        } catch(\Exception $e){
+            return $this->respon('failed','Gagal logout!');
+        }
         $out = Session::where('orangs_id',decrypt($token))->first();
         if (!$out) return $this->respon('failed','Gagal logout!');
         $out->waktu = null;
@@ -574,7 +574,7 @@ class pernahControl extends Controller
             }
             $token = $update;
         } else{
-            return $this->respon('expired','Anda harus login terlebih dahulu!');
+            return $this->respon('failed','Anda harus login terlebih dahulu!');
         }
 
         $vote = $req->vote;
@@ -593,20 +593,11 @@ class pernahControl extends Controller
 
     public function getReview(request $req){
         $id = $req->tempat;
-        if($req->token) {
-            $cek = Session::cekToken($req->token);
-            if($cek == 'no'){
-                return $this->respon('expired','Waktu login anda habis!');
-            } 
-            $update = Session::updateToken($req->token);
-            if($update == 'no'){
-                return $this->respon('expired','Anda harus login ulang!');
-            }
-            $token = $update;
-        } else {
-            return $this->respon('no_token');
+        $orang = null;
+        $vote = null;
+        if($req->token){
+            $orang = decrypt($req->token);
         }
-        $orang = decrypt($req->token);
         
 
 
@@ -615,16 +606,19 @@ class pernahControl extends Controller
         $data = Review::where('tempats_id',$id)->get();
         $item = [];
         if($data->isEmpty()) return $this->respon('success','Tidak ada data!',$item);
-        
         $i=0;
         foreach($data as $d ){
             $total = ReviewPoint::where('reviews_id',$d->id)->sum('review_point');
-            $vote = ReviewPoint::where('reviews_id',$d->id)->where('orangs_id',$orang)->first();
+            if($orang){
+                $vote = ReviewPoint::where('reviews_id',$d->id)->where('orangs_id',$orang)->first();
+            }
             if($vote){
                 $vote = $vote->review_point;
                 if($vote == 1) $vote = 'up';
                 else if($vote == -1) $vote = 'down';
                 else $vote = 'nothing';
+            }else {
+                $vote = null;
             }
             $item[$i] = [
                 'id'                => $d->id,

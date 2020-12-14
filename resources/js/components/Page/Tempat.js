@@ -141,15 +141,9 @@ const Tempat = () => {
                         "X-CSRF-TOKEN": csrf_token
                     }
                 }).then(response => {
-                    if (response.data.status !== "failed") {
-                        console.log(response, "test");
-                        if (response.data.status === "no_token") {
-                            // setTokenStatus(false);
-                            setDataReview(response.data.data);
-                        } else {
-                            // setTokenStatus(true);
-                            setDataReview(response.data.data);
-                        }
+                    if (response.data.status !== "failed") {                        
+                        setDataReview(response.data.data);  
+                                                                      
                     } else {
                         console.log(response, "test");
                         setDataReview(response.data.data);
@@ -291,7 +285,7 @@ const Tempat = () => {
                     console.log(response);
                 });
         } else {
-            message.error("harap login terlebih dahulu");
+            message.error("Harap login terlebih dahulu!");
         }
     };
 

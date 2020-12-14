@@ -36,6 +36,7 @@ import {
 } from "@ant-design/icons";
 import { capitalize } from "lodash";
 import Axios from "axios";
+import { BaseContext } from "../BaseContext";
 
 import "./Home.scss";
 
@@ -43,7 +44,8 @@ const Saran = () => {
 
     const [listKota, setListKota] = useState(null);
     const [listKategori, setListKategori] = useState(null);
-
+    const { token, setToken, setUser } = useContext(BaseContext);
+    const [form] = Form.useForm();
 
     const formItemLayout = {
         labelCol: {
@@ -107,13 +109,52 @@ const Saran = () => {
     }, [])
 
     const onFinishTempat = (values) => {
-        console.log("tewaaww", values);
+        console.log(values);
+        const {kota,alamat,deskripsi,tempat,kategori} = values;      
+        Axios.defaults.xsrfHeaderName ="X-CSRFToken";
+                                        var bodyFormData = new FormData();
+                                        bodyFormData.append("kota",kota );
+                                        bodyFormData.append("alamat",alamat );
+                                        bodyFormData.append("deskripsi",deskripsi);
+                                        bodyFormData.append("tempat",tempat );
+                                        bodyFormData.append("kategori",kategori );
+                                        bodyFormData.append("token",token );
+
+
+                                        Axios({
+                                            method: "post",
+                                            url: "/sarantempat",
+                                            data: bodyFormData,
+                                            headers: {
+                                                "X-CSRF-TOKEN": csrf_token
+                                            }
+                                        })
+                                            .then(response => {
+                                                console.log(response);
+                                                if (
+                                                    response.data.status ===
+                                                    "failed"
+                                                ) {
+                                                    message.error(
+                                                        response.data.message
+                                                    );
+                                                } else {
+                                                    form.resetFields();
+                                                    message.success(
+                                                        response.data.message
+                                                    );
+                                                    
+                                                }
+                                            })
+                                            .catch(function(response) {
+                                                console.log(response);
+                                            });
     };
 
     return (
         <div className="homepagee" style={{ width: "80%", margin: "0 10%" }}>
 
-            <Form name="tempat" onFinish={onFinishTempat} autoComplete="off"
+            <Form name="tempat" form={form}  onFinish={onFinishTempat} autoComplete="off"
                 {...formItemLayout}
             >
 
@@ -162,7 +203,7 @@ const Saran = () => {
                 >
                     <Select mode="multiple" >
                         {listKategori && listKategori.length !== 0 ? listKategori.map(kategori => (
-                            <Option value={kategori.id}>{kategori.kategori}</Option>
+                            <Option value={kategori.kategori}>{kategori.kategori}</Option>
                         )) : ""}
                     </Select>
                 </Form.Item>

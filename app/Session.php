@@ -41,8 +41,6 @@ class Session extends Model
 
     public static function login($id){
         if(!$id) return 'no';
-        $cek = Session::cekToken(encrypt($id));
-        if($cek == 'no') return 'no';
         $cek = Session::updateToken(encrypt($id));
         if($cek == 'no') return 'no';
 
@@ -51,6 +49,11 @@ class Session extends Model
 
     public static function cekToken($token){
         if(!$token) return 'no';
+        try{
+            $tes = decrypt($token);
+        } catch(\Exception $e){
+            return 'no';
+        }
         $token = Session::where('orangs_id',(decrypt($token)))->first();
         if(!$token) return 'no';
         if(!$token->waktu){
@@ -70,6 +73,11 @@ class Session extends Model
 
     public static function updateToken($token){
         if(!$token) return 'no';
+        try{
+            $tes = decrypt($token);
+        } catch(\Exception $e){
+            return 'no';
+        }
         $token = Session::where('orangs_id',(decrypt($token)))->first();
         if(!$token) return 'no';
         $token->waktu = Carbon::now();

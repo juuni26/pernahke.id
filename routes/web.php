@@ -19,7 +19,7 @@ Route::get('/{path?}', [
 ]);
 
 
-Route::get('tester','pernahControl@tester');
+Route::get('data/tester','pernahControl@tester');
 
 route::post('create/provinsi','pernahControl@insProvinsi');
 route::post('create/kota','pernahControl@insKota');
@@ -34,6 +34,7 @@ route::post('review','pernahControl@review');
 route::post('reviewvote','pernahControl@reviewPoint');
 route::post('data/review','pernahControl@getReview');
 route::post('search','pernahControl@getSearch');
+route::post('sarantempat','pernahControl@saranTempat');
 
 route::get('data/provinsi','pernahControl@getProvinsi');
 route::get('data/kota','pernahControl@getKota');

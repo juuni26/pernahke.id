@@ -36,6 +36,7 @@ import {
 } from "@ant-design/icons";
 import { capitalize } from "lodash";
 import Axios from "axios";
+import {BaseContext} from '../BaseContext';
 
 import { Link as Pointer, animateScroll as scroll } from "react-scroll";
 
@@ -43,6 +44,9 @@ import "./Home.scss";
 
 const Home = () => {
     const myRef = useRef(null);
+
+    const { token } = useContext(BaseContext);
+
     const executeScroll = () => myRef.current.scrollIntoView();
 
     const [placeholder, setPlaceholder] = useState("");
@@ -342,11 +346,15 @@ const Home = () => {
                     </form>
                 </div>
                 <div style={{ textAlign: "left" }}>
-                    <Link to="saran-inputan">
+                    {token?<Link to="saran-inputan">
                         <span className="sarantempat">
                             Mau saranin tempat yang belum ada, klik disini !
                         </span>
-                    </Link>
+                    </Link>:
+                    <span className="sarantempat" onClick={()=>{message.error("Harap login terlebih dahulu!")}}>
+                    Mau saranin tempat yang belum ada, klik disini !
+                </span> }
+                    
                 </div>
 
                 <Pointer

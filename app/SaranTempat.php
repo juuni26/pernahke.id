@@ -10,7 +10,7 @@ class SaranTempat extends Model
     protected $fillable = [
         'orangs_id',
         'kotas_id',
-        'kategoris_id',
+        'kategori',
         'saran_tempat',
         'alamat',
         'gmaps',
@@ -21,7 +21,7 @@ class SaranTempat extends Model
         $ins = new SaranTempat([
             'orangs_id'     => $orang,
             'kotas_id'      => $kota,
-            'kategoris_id'  => $kategori,
+            'kategori'      => $kategori,
             'saran_tempat'  => $tempat,
             'alamat'        => $alamat,
             'gmaps'         => $gmaps,
