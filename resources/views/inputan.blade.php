@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="shortcut icon" href="https://www.iconninja.com/files/795/910/519/flash-saver-superhero-earth-super-hero-man-icon.svg" type="image/x-icon">
+    <link rel="shortcut icon" href="/images/logo.png" type="image/x-icon">
     <meta name="dicoding:email" content="junio.akarda26@gmail.com">
     <title>Pernahke | Tempat sharing pengalaman wisata di Indonesia</title>
 </head>

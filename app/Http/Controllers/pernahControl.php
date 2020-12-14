@@ -483,37 +483,48 @@ class pernahControl extends Controller
     }
 
     public function getPengenke(request $req){
-        if($req->token) {
-            $cek = Session::cekToken($req->token);
-            if($cek == 'no'){
-                return $this->respon('expired','Waktu login anda habis!');
-            } 
-            $update = Session::updateToken($req->token);
-            if($update == 'no'){
-                return $this->respon('expired','Anda harus login ulang!');
-            }
-            $token = $update;
-        } else{
-            return $this->respon('expired','Anda harus login terlebih dahulu!');
-        }
+        // if($req->token) {
+        //     $cek = Session::cekToken($req->token);
+        //     if($cek == 'no'){
+        //         return $this->respon('expired','Waktu login anda habis!');
+        //     } 
+        //     $update = Session::updateToken($req->token);
+        //     if($update == 'no'){
+        //         return $this->respon('expired','Anda harus login ulang!');
+        //     }
+        //     $token = $update;
 
-        $data = Pengenke::where('orangs_id',decrypt($req->token))->where('tempats_id',$req->tempat)->first();
-        $count = PengenKe::where('tempats_id',$req->tempat)->where('status',1)->count();
-        if($data){
-            $item = [
-                'status' => $data->status,
-                'total'  => $count,
-            ];
-            $item = (object)$item;
-        } else {
-            $item = [];
-            $item = (object)$item;
-        }
-        if($data){
-            return $this->respon('success','',$item,$token);
-        } else{
-            return $this->respon('failed','Tidak bisa kesini!');
-        }
+            
+        // } else{
+        //     return $this->respon('expired','Anda harus login terlebih dahulu!');
+        // }    
+            $status = null;
+            if($req->token){
+                $data = Pengenke::where('orangs_id',decrypt($req->token))->where('tempats_id',$req->tempat)->first();
+                $status = $data->status;
+            } 
+
+            $count = PengenKe::where('tempats_id',$req->tempat)->where('status',1)->count();
+            if($status){
+                $item = [
+                    'status' => $data->status,
+                    'total'  => $count,
+                    'state'  => 'login',
+                ];
+                $item = (object)$item;
+            } else {
+                $item = [
+                    'status' => $status,
+                    'total'  => $count,
+                    'state'  => 'no_login',
+                ];
+                $item = (object)$item;
+            }
+            if($item){
+                return $this->respon('success','',$item);
+            } else{
+                return $this->respon('failed','Tidak bisa kesini!');
+            }
     }
 
     public function review(request $req){

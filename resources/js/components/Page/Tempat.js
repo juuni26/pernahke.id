@@ -80,7 +80,8 @@ const Tempat = () => {
     const [data, setData] = useState(null);
     const [dataReview, setDataReview] = useState(null);
     const [jumlahLike, setJumlahLike] = useState(0);
-    const { token, setToken } = useContext(BaseContext);
+    const { token, setToken,setUser } = useContext(BaseContext);   
+
 
 
     const { id } = useParams();
@@ -91,8 +92,7 @@ const Tempat = () => {
         window.scrollTo(0, 0);
         Axios.get(`/data/tempat-detail/${id}`).then(resp => {
           
-            setData(resp.data.data[0]);
-            // console.log(resp.data.data[0].kategori,"owaa");
+            setData(resp.data.data[0]);            
         });
 
         Axios.defaults.xsrfHeaderName = "X-CSRFToken";
@@ -115,17 +115,67 @@ const Tempat = () => {
              
                 if (response.data.status !== "failed") {
 
-                  
-                    setJumlahLike(response.data.data.total);
-                    if (response.data.data.status === 1) {
-                        setLikeState(true);
+                    // if token expired
+                    // if(response.data.status === "expired"){
+                    //     message.error(
+                    //         response.data.message
+                    //     );
+                    //     // logout
+                    //     Axios.defaults.xsrfHeaderName =
+                    //                         "X-CSRFToken";
+                    //                     var bodyFormData = new FormData();
+                    //                     bodyFormData.append("token", token);
+                    //                     Axios({
+                    //                         method: "post",
+                    //                         url: "/logout",
+                    //                         data: bodyFormData,
+                    //                         headers: {
+                    //                             "X-CSRF-TOKEN": csrf_token
+                    //                         }
+                    //                     })
+                    //                         .then(response => {
+                    //                             console.log(response);
+                    //                             if (
+                    //                                 response.data.status ===
+                    //                                 "failed"
+                    //                             ) {
+                    //                                 message.error(
+                    //                                     response.data.message
+                    //                                 );
+                    //                             } else {
+                    //                                 message.success(
+                    //                                     response.data.message
+                    //                                 );
+                    //                                 localStorage.clear();
+                    //                                 setToken("");
+                    //                                 setUser("");
+                    //                             }
+                    //                         })
+                    //                         .catch(function(response) {
+                    //                             console.log(response);
+                    //                         });
+                    //                 }
+
+                                    // if other
+                                  
+                    if(response.data.data.state === "login"){
+                        
+                        if (response.data.data.status === 1) {
+                            setLikeState(true);
+                        }
+                        else {
+                            setLikeState(null);
+                        }
                     }
                     else {
                         setLikeState(null);
                     }
-                    // message.success(response.data.message);
-
+                    setJumlahLike(response.data.data.total);
+                
                 }
+
+
+
             }).then(() => {
 
 
@@ -250,52 +300,56 @@ const Tempat = () => {
 
         let likee = !likeState ? "active" : "inactive";        
         // token,status,tempat
-        Axios.defaults.xsrfHeaderName = "X-CSRFToken";
-        let bodyFormData = new FormData();
         let tkn = token ? token : "";
 
-        bodyFormData.append("token", tkn);
-        bodyFormData.append("tempat", id);
-        bodyFormData.append("status", likee);
+        if(tkn){
 
-
-        Axios({
-            method: "post",
-            url: "/like",
-            data: bodyFormData,
-            headers: {
-                "X-CSRF-TOKEN": csrf_token
-            }
-        })
-            .then(response => {
-
-                if (response.data.status !== "failed") {
-                    if (response.data) {
-                        setToken(response.data.token);
-                        localStorage.setItem('token', response.data.token);
-                        setLikeState(!likeState);
-                        if (kondisi === "minus") {
-                            setJumlahLike(+jumlahLike - 1)
+            Axios.defaults.xsrfHeaderName = "X-CSRFToken";
+            let bodyFormData = new FormData();
+    
+            bodyFormData.append("token", tkn);
+            bodyFormData.append("tempat", id);
+            bodyFormData.append("status", likee);
+    
+            Axios({
+                method: "post",
+                url: "/like",
+                data: bodyFormData,
+                headers: {
+                    "X-CSRF-TOKEN": csrf_token
+                }
+            })
+                .then(response => {
+    
+                    if (response.data.status !== "failed") {
+                        if (response.data) {
+                            setToken(response.data.token);
+                            localStorage.setItem('token', response.data.token);
+                            setLikeState(!likeState);                            
+                            if (kondisi === "minus") {
+                                setJumlahLike(+jumlahLike - 1)
+                            }
+                            else {
+                                setJumlahLike(+jumlahLike + 1)    
+                            }
                         }
                         else {
-                            setJumlahLike(+jumlahLike + 1)
-
+                            message.error(response.data.message);
                         }
-
                     }
                     else {
                         message.error(response.data.message);
                     }
+                })
+                .catch(function (response) {
+                    console.log(response);
+                });
 
-
-                }
-                else {
-                    message.error(response.data.message);
-                }
-            })
-            .catch(function (response) {
-                console.log(response);
-            });
+        }
+        else {
+            message.error("harap login terlebih dahulu");
+        }
+        
 
 
 
