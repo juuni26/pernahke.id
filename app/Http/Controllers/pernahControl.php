@@ -501,7 +501,11 @@ class pernahControl extends Controller
             $status = null;
             if($req->token){
                 $data = Pengenke::where('orangs_id',decrypt($req->token))->where('tempats_id',$req->tempat)->first();
-                $status = $data->status;
+                if($data){
+                    $status = $data->status;
+                } else {
+                    $status = null;
+                }
             } 
 
             $count = PengenKe::where('tempats_id',$req->tempat)->where('status',1)->count();

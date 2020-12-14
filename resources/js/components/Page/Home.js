@@ -339,7 +339,7 @@ const Home = () => {
                         <datalist id="data" style={{ width: "100%" }}>
                             {listSearch.length > 0
                                 ? listSearch.map(l => (
-                                      <option value={l}>{l}</option>
+                                      <option >{l}</option>
                                   ))
                                 : ""}
                         </datalist>
