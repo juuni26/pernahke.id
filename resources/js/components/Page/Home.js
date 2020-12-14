@@ -37,6 +37,8 @@ import {
 import { capitalize } from "lodash";
 import Axios from "axios";
 
+import { Link as Pointer, animateScroll as scroll } from "react-scroll";
+
 import "./Home.scss";
 
 const Home = () => {
@@ -65,19 +67,15 @@ const Home = () => {
     const [searchResult, setSearchResult] = useState([]);
     const [searchValue, setSearchValue] = useState(null);
 
-    const [searchPage,setSearchPage] = useState(1);
-    
-
+    const [searchPage, setSearchPage] = useState(1);
 
     const handleChange = e => {
         setSearchValue(e.target.value);
-    }
+    };
 
     const handleSearch = e => {
         e.preventDefault();
         if (searchValue) {
-
-
             Axios.defaults.xsrfHeaderName = "X-CSRFToken";
 
             var bodyFormData = new FormData();
@@ -99,34 +97,31 @@ const Home = () => {
                         setSearchResult(response.data.data);
                         setSearchState(true);
                     }
-
                 })
-                .catch(function (response) {
+                .catch(function(response) {
                     console.log(response);
                 });
-
         }
-
     };
 
-    const prevSearch = ()=>{
-        if(searchResult.length>3 && searchPage!== 1 ){
-            setSearchPage(searchPage-1);
-        }       
+    const prevSearch = () => {
+        if (searchResult.length > 3 && searchPage !== 1) {
+            setSearchPage(searchPage - 1);
+        }
     };
 
-    const nextSearch = ()=>{
-        if(searchResult.length>3 && searchPage !== Math.ceil(searchResult.length/3)  ){
-            setSearchPage(searchPage+1);
-        }     
-
+    const nextSearch = () => {
+        if (
+            searchResult.length > 3 &&
+            searchPage !== Math.ceil(searchResult.length / 3)
+        ) {
+            setSearchPage(searchPage + 1);
+        }
     };
 
     //  end search
 
     const slideLeft = () => {
-        // let newSlider = +slider - 1 === 0 ? 3 : slider - 1;
-        // setSlider(newSlider);
 
         let newSlider =
             +provinsiSlide - 1 === 0
@@ -160,7 +155,6 @@ const Home = () => {
         setKotaSlide(newSlider);
     };
 
-
     const handleToKota = (id, provinsi_nama) => {
         Axios.get(`/data/kota-provinsi/${id}`).then(response => {
             if (response.data.status === "failed") {
@@ -191,16 +185,15 @@ const Home = () => {
                 setProvinsi(response.data.data);
                 localStorage.setItem("provinsi", "true");
             })
-            .then(() => { });
+            .then(() => {});
 
         Axios.get("/data/listsearch").then(response => {
             if (response.data.message !== "failed") {
-
                 // var obj = {"1":5,"2":7,"3":0,"4":0,"5":0,"6":0,"7":0,"8":0,"9":0,"10":0,"11":0,"12":0}
-                let result = Object.keys(response.data.data).map((key) => response.data.data[key]);
+                let result = Object.keys(response.data.data).map(
+                    key => response.data.data[key]
+                );
                 setListSearch(result);
-
-
             }
         });
 
@@ -208,7 +201,7 @@ const Home = () => {
         let txtLen = txt.length;
         setPlaceholder("|");
         let i = 0;
-        let itt = setInterval(function () {
+        let itt = setInterval(function() {
             if (+i == txtLen) {
                 setPlaceholder(txt);
                 clearTimeout(itt);
@@ -234,52 +227,90 @@ const Home = () => {
                     <CloseOutlined />
                 </div>
                 <section className="search-result-list">
+                    {searchResult.length > 0
+                        ? // check datanya
+                          searchResult.length < 3
+                            ? searchResult.map(data => {
+                                  return (
+                                      <div className="single-result">
+                                          <Link to={`/tempat/${data.id}`}>
+                                              <h6>{data.tempat}</h6>
+                                          </Link>
+                                          <div className="single-result-content">
+                                              <img
+                                                  src={JSON.parse(data.foto)[0]}
+                                              />
+                                              <p>
+                                                  {data.deskripsi &&
+                                                  data.deskripsi.length > 200
+                                                      ? data.deskripsi
+                                                            .split("")
+                                                            .slice(0, 200)
+                                                            .join("") + "..."
+                                                      : data.deskripsi}
+                                                  <Link
+                                                      to={`/tempat/${data.id}`}
+                                                  >
+                                                      <span className="see-more">
+                                                          See more
+                                                      </span>
+                                                  </Link>
+                                              </p>
+                                          </div>
+                                      </div>
+                                  );
+                              })
+                            : // searchresult lebih dari 3
+                              searchResult
+                                  .slice(searchPage * 3 - 3, searchPage * 3)
+                                  .map(data => {
+                                      return (
+                                          <div className="single-result">
+                                              <Link to={`/tempat/${data.id}`}>
+                                                  <h6>{data.tempat}</h6>
+                                              </Link>
+                                              <div className="single-result-content">
+                                                  <img
+                                                      src={
+                                                          JSON.parse(
+                                                              data.foto
+                                                          )[0]
+                                                      }
+                                                  />
+                                                  <p>
+                                                      {data.deskripsi &&
+                                                      data.deskripsi.length >
+                                                          200
+                                                          ? data.deskripsi
+                                                                .split("")
+                                                                .slice(0, 200)
+                                                                .join("") +
+                                                            "..."
+                                                          : data.deskripsi}
+                                                      <Link
+                                                          to={`/tempat/${data.id}`}
+                                                      >
+                                                          <span className="see-more">
+                                                              See more
+                                                          </span>
+                                                      </Link>
+                                                  </p>
+                                              </div>
+                                          </div>
+                                      );
+                                  })
+                        : "Search not found, try other keyword !"}
 
-                    {
-                        searchResult.length > 0 ?
-                        // check datanya
-                            searchResult.length<3? searchResult.map(data => {
-                                return (
-                                    <div className="single-result">
-                                        <Link to={`/tempat/${data.id}`}>
-                                            <h6>
-                                                {data.tempat}</h6>
-                                        </Link>
-                                        <div className="single-result-content">
-                                            <img src={JSON.parse(data.foto)[0]} />
-                                            <p>
-                                               {data.deskripsi&&data.deskripsi.length>200?data.deskripsi.split('').slice(0,200).join('')+'...':data.deskripsi}
-                            <Link to={`/tempat/${data.id}`}><span className="see-more">See more</span></Link>
-                                            </p>
-                                        </div>
-                                    </div>)
-                            }
-                            ): 
-                            // searchresult lebih dari 3
-                            searchResult.slice(searchPage*3-3,searchPage*3).map(data => {
-                                return (
-                                    <div className="single-result">
-                                        <Link to={`/tempat/${data.id}`}>
-                                            <h6>
-                                                {data.tempat}</h6>
-                                        </Link>
-                                        <div className="single-result-content">
-                                            <img src={JSON.parse(data.foto)[0]} />
-                                            <p>
-                                               {data.deskripsi&&data.deskripsi.length>200?data.deskripsi.split('').slice(0,200).join('')+'...':data.deskripsi}
-                            <Link to={`/tempat/${data.id}`}><span className="see-more">See more</span></Link>
-                                            </p>
-                                        </div>
-                                    </div>)
-                            }
-                            )                                                           
-                            : "Search not found, try other keyword !"
-                    }
-                   
                     <div className="leftt" onClick={prevSearch}>
                         <ArrowLeftOutlined /> Sebelumnya
                     </div>
-                <div className="middlee">{searchPage} dari {searchResult.length>3? Math.ceil(searchResult.length/3):"1"} halaman </div>
+                    <div className="middlee">
+                        {searchPage} dari{" "}
+                        {searchResult.length > 3
+                            ? Math.ceil(searchResult.length / 3)
+                            : "1"}{" "}
+                        halaman{" "}
+                    </div>
                     <div className="rightt" onClick={nextSearch}>
                         Selanjutnya <ArrowRightOutlined />
                     </div>
@@ -302,24 +333,40 @@ const Home = () => {
                             <SearchOutlined />
                         </button>
                         <datalist id="data" style={{ width: "100%" }}>
-                            {
-                                listSearch.length > 0
-                                    ? listSearch.map(l => (
-                                        <option value={l}>{l}</option>
-                                    ))
-                                    : ""}
+                            {listSearch.length > 0
+                                ? listSearch.map(l => (
+                                      <option value={l}>{l}</option>
+                                  ))
+                                : ""}
                         </datalist>
                     </form>
                 </div>
-                <div style={{ textAlign: "left" }}><Link to="saran-inputan"><span className="sarantempat">Mau saranin tempat yang belum ada, klik disini !</span></Link></div>
+                <div style={{ textAlign: "left" }}>
+                    <Link to="saran-inputan">
+                        <span className="sarantempat">
+                            Mau saranin tempat yang belum ada, klik disini !
+                        </span>
+                    </Link>
+                </div>
 
+                <Pointer
+                    activeClass="active"
+                    to="prov"
+                    spy={true}
+                    smooth={true}
+                    offset={-200}
+                    duration={500}
+                >
                 <div className="btmm1">Bingung? Ayo explore Indonesia !</div>
 
-                <div className="arrow bounce btmm" onClick={executeScroll}>
-                    <span>
-                        <ArrowDownOutlined style={{ color: "#fff" }} />
-                    </span>
-                </div>
+              
+                    <div className="arrow bounce btmm" 
+                    >
+                        <span>
+                            <ArrowDownOutlined style={{ color: "#fff" }} />
+                        </span>
+                    </div>
+                </Pointer>
             </div>
 
             <div className="whole-section">
@@ -338,77 +385,77 @@ const Home = () => {
                         <RightOutlined style={{ fontSize: "2rem" }} />
                     </div>
 
-                    <h5 className="area-title" ref={myRef}>
+                    <h5 className="area-title" ref={myRef} id="prov">
                         Provinsi
                     </h5>
 
                     <div className="picture-list">
                         {provinsi && provinsi.length > 0 ? (
                             provinsiSlide ===
-                                Math.ceil(provinsi.length / 10) ? (
-                                    provinsi
-                                        .slice(
-                                            +provinsiSlide * 10 - 10,
-                                            +provinsi.length
-                                        )
-                                        .map(provinsi => {
-                                            let nama = provinsi.provinsi;
-                                            let url = JSON.parse(provinsi.foto)[0];
-                                            return (
-                                                <div
-                                                    className="card"
-                                                    onClick={() => {
-                                                        handleToKota(
-                                                            provinsi.id,
-                                                            provinsi.provinsi
-                                                        );
-                                                    }}
-                                                >
-                                                    <img
-                                                        className="card-image"
-                                                        src={url}
-                                                        alt={url}
-                                                    />
-                                                    <div className="content">
-                                                        <h4>{nama}</h4>
-                                                    </div>
+                            Math.ceil(provinsi.length / 10) ? (
+                                provinsi
+                                    .slice(
+                                        +provinsiSlide * 10 - 10,
+                                        +provinsi.length
+                                    )
+                                    .map(provinsi => {
+                                        let nama = provinsi.provinsi;
+                                        let url = JSON.parse(provinsi.foto)[0];
+                                        return (
+                                            <div
+                                                className="card"
+                                                onClick={() => {
+                                                    handleToKota(
+                                                        provinsi.id,
+                                                        provinsi.provinsi
+                                                    );
+                                                }}
+                                            >
+                                                <img
+                                                    className="card-image"
+                                                    src={url}
+                                                    alt={url}
+                                                />
+                                                <div className="content">
+                                                    <h4>{nama}</h4>
                                                 </div>
-                                            );
-                                        })
-                                ) : (
-                                    provinsi
-                                        .slice(
-                                            +provinsiSlide * 10 - 10,
-                                            +provinsiSlide * 10
-                                        )
-                                        .map(provinsi => {
-                                            let nama = provinsi.provinsi;
-                                            let url = JSON.parse(provinsi.foto)[0];
-                                            return (
-                                                <div
-                                                    className="card"
-                                                    onClick={() => {
-                                                        handleToKota(
-                                                            provinsi.id,
-                                                            provinsi.provinsi
-                                                        );
-                                                    }}
-                                                >
-                                                    <img
-                                                        className="card-image"
-                                                        src={url}
-                                                        alt={url}
-                                                    />
-                                                    <div className="content">
-                                                        <h4>{nama}</h4>
-                                                    </div>
+                                            </div>
+                                        );
+                                    })
+                            ) : (
+                                provinsi
+                                    .slice(
+                                        +provinsiSlide * 10 - 10,
+                                        +provinsiSlide * 10
+                                    )
+                                    .map(provinsi => {
+                                        let nama = provinsi.provinsi;
+                                        let url = JSON.parse(provinsi.foto)[0];
+                                        return (
+                                            <div
+                                                className="card"
+                                                onClick={() => {
+                                                    handleToKota(
+                                                        provinsi.id,
+                                                        provinsi.provinsi
+                                                    );
+                                                }}
+                                            >
+                                                <img
+                                                    className="card-image"
+                                                    src={url}
+                                                    alt={url}
+                                                />
+                                                <div className="content">
+                                                    <h4>{nama}</h4>
                                                 </div>
-                                            );
-                                        })
-                                )
+                                            </div>
+                                        );
+                                    })
+                            )
                         ) : (
-                                <Skeleton />
-                            )}
+                            <Skeleton />
+                        )}
                     </div>
                 </section>
 
@@ -464,8 +511,8 @@ const Home = () => {
                                 );
                             })
                         ) : (
-                                <Skeleton />
-                            )}
+                            <Skeleton />
+                        )}
                     </div>
                 </section>
 
@@ -533,8 +580,8 @@ const Home = () => {
                                 );
                             })
                         ) : (
-                                <Skeleton />
-                            )}
+                            <Skeleton />
+                        )}
                     </div>
                 </section>
             </div>

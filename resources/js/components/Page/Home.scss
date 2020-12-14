@@ -232,6 +232,7 @@ text-decoration: underline;
 .section {
     width: 100%;
     height: auto;
+   
 
     // background-color: rgb(22, 177, 138);
     position: absolute;
@@ -241,7 +242,7 @@ text-decoration: underline;
 
     &.active {
         display: block;
-        animation: come 1s ease-in-out;
+         transition: all .8s;
     }
     .rightDir {
         position: absolute;
@@ -258,6 +259,7 @@ text-decoration: underline;
         cursor: pointer;
     }
     &.provinsi {
+       
     }
     &.kota {
     }
