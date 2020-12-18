@@ -39,6 +39,8 @@ import Axios from "axios";
 import {BaseContext} from '../BaseContext';
 
 import { Link as Pointer, animateScroll as scroll } from "react-scroll";
+// import 'react-slideshow-image/dist/styles.css';
+// import { Slide } from 'react-slideshow-image';
 
 import "./Home.scss";
 

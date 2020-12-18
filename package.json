@@ -23,6 +23,7 @@
     },
     "dependencies": {
         "@ant-design/icons": "^4.3.0",
+        "ac-react-simple-image-slider": "0.0.9",
         "antd": "^4.8.3",
         "react-router-dom": "^5.2.0",
         "react-scroll": "^1.8.1"

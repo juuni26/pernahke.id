@@ -12,6 +12,8 @@ import Saran from "./Page/Saran";
 import Login from "./User/Login";
 import Register from "./User/Register";
 import Main from './Main';
+import NotFound from './Page/NotFound';
+
 
 
 // import Movie from "./Pages/Movie_detail";
@@ -57,6 +59,8 @@ const Routes = () => {
             <Route exact path="/admin/input">
                 <Main/>
             </Route>
+            <Route component={NotFound} />
+
         </Switch>
     );
 };

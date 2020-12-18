@@ -482,3 +482,37 @@ text-decoration: underline;
 
 
 }
+
+.each-slide > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-size: cover;
+    height: 350px;
+  }
+
+// 404 
+
+.not-found {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;    
+    min-height: 80vh;
+h4 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: rgb(128, 202, 226);
+}
+    img {
+        height: 50vh;
+    }
+    a {
+        text-decoration: underline;
+        font-weight: 500;
+        font-size: 1rem;
+        &:hover {
+        color: rgb(17, 17, 153);
+        }
+    }
+}

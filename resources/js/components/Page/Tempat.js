@@ -30,6 +30,9 @@ import {
 
 import "./Tempat.scss";
 
+import _ from 'lodash';
+
+
 const CollectionCreateForm = ({ visible, onCreate, onCancel }) => {
     const [form] = Form.useForm();
     return (
@@ -68,7 +71,7 @@ const CollectionCreateForm = ({ visible, onCreate, onCancel }) => {
                         }
                     ]}
                 >
-                    <Input.TextArea />
+                    <Input.TextArea rows={6} />
                 </Form.Item>
             </Form>
         </Modal>
@@ -542,8 +545,8 @@ const Tempat = () => {
                 </article>
                 <section className="review-section">
                     <h4>
-                        Lihat Kata mereka yang{" "}
-                        <span className="pernahke">PernahKe</span> sini
+                        Lihat Kata mereka yang
+                        <span className="pernahke"> PernahKe</span> sini
                     </h4>
                     <div
                         style={{
@@ -554,12 +557,14 @@ const Tempat = () => {
                     >
                         {token ? (
                             <Button
+                            size="medium"
                                 type="primary"
                                 onClick={() => {
                                     setVisible(true);
                                 }}
+                                
                             >
-                                <PlusOutlined /> Sharing sesuatu ditempat ini
+                                <PlusOutlined /> Mulai Sharing!
                             </Button>
                         ) : (
                             <div
@@ -624,12 +629,14 @@ const Tempat = () => {
                                     </div>
                                     <div className="review-content-center">
                                         <p>
-                                            {review.nama} | {review.asal}{" "}
+
+
+                                        
+                                            {_.startCase(_.toLower(review.nama))} | {_.startCase(_.toLower(review.nama))}
                                         </p>
                                         <p>{review.review}</p>
                                     </div>
-                                    <div className="review-content-right">
-                                        <p>rate time</p>
+                                    <div className="review-content-right">                                        
                                         <div className="vote">
                                             <div
                                                 className={
@@ -684,6 +691,8 @@ const Tempat = () => {
                                                     style={{ fontSize: "2rem" }}
                                                 />
                                             </div>
+
+
                                         </div>
                                     </div>
                                 </div>
@@ -693,7 +702,7 @@ const Tempat = () => {
                         <div
                             style={{
                                 margin: "4vh 0",
-                                fontSize: "1.5rem",
+                                fontSize: "1.1rem",
                                 color: "gray"
                             }}
                         >

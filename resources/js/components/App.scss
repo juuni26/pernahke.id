@@ -80,15 +80,19 @@
 }
 
 footer {
-    width: 100%;
-    height: 30vh;
+    width: 100%;    
     display: flex;
     flex-direction: column;
     justify-content: center;
     background-color: #32324e;
     position: relative;
     color: #fff;
+    padding: 2.5vh 0;
 
+
+    @media (max-width: 500px) {
+        height: auto;                             
+    }
     
     // align-items: center;
 }
@@ -96,6 +100,13 @@ footer {
 .footer {
     display: flex;
     font-size: 1rem;
+    margin-bottom: 1vh;
+
+    @media (max-width: 500px) {
+        font-size: .9rem;                     
+    }
+
+
 
     justify-content: space-around;
     .footer-title {
