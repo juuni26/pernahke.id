@@ -17,7 +17,7 @@ import {
     Modal,
     Form,
     Input,
-    Radio
+    Radio,Tag
 } from "antd";
 
 import {
@@ -253,8 +253,9 @@ const Tempat = () => {
                                     console.log(response);
                                     if (response.data.status === "failed") {
                                         message.error(response.data.message);
-                                    } else {
-                                        message.success(response.data.message);
+                                    } else {                                       
+                                        message.error   ("Waktu login anda telah habis, harap login kembali!");
+
                                         localStorage.clear();
                                         setToken("");
                                         setUser("");
@@ -529,7 +530,17 @@ const Tempat = () => {
                     </div>
                     <div className="tempat-tag">
                         <h5>TAGS</h5>
-                        <div className="tempat-tag-detail">
+                        <div className="tempat-tags">
+                        {data.hashtag.split(",").map(d => (
+                                
+                                <Tag color="blue" className="tagg" >{d}</Tag>
+                                // <div classN  ame="tempat-tag-detail-detail">
+                                //     {d}
+                                // </div>
+                            ))}
+</div>
+                        
+                        {/* <div className="tempat-tag-detail">
                             {data.hashtag.split(",").map(d => (
                                 <div className="tempat-tag-detail-detail">
                                     {d}
@@ -540,7 +551,7 @@ const Tempat = () => {
                                     {k}
                                 </div>
                             ))}
-                        </div>
+                        </div> */}
                     </div>
                 </article>
                 <section className="review-section">
@@ -638,6 +649,7 @@ const Tempat = () => {
                                     </div>
                                     <div className="review-content-right">                                        
                                         <div className="vote">
+                                            <p>Vote</p>
                                             <div
                                                 className={
                                                     review.vote === "up"
@@ -659,7 +671,7 @@ const Tempat = () => {
                                                 }}
                                             >
                                                 <UpOutlined
-                                                    style={{ fontSize: "2rem" }}
+                                                    style={{ fontSize: "1.8rem" }}
                                                 />
                                             </div>
                                             <div className="scoree">
@@ -688,7 +700,7 @@ const Tempat = () => {
                                                 }}
                                             >
                                                 <DownOutlined
-                                                    style={{ fontSize: "2rem" }}
+                                                    style={{ fontSize: "1.8rem" }}
                                                 />
                                             </div>
 

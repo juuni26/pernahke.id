@@ -147,34 +147,50 @@
     overflow-x: hidden;
 
     }
-    .tempat-tag-detail{
-        display: grid;
-        grid-template-columns: auto ;
-       
-        width: 100%;        
-        gap: 2rem;
-        padding: 0 5%;
-        
-        @media (min-width: 600px) {
-            grid-template-columns: auto auto;              
-            }
 
-        @media (min-width: 800px) {
-        grid-template-columns: auto auto auto auto;          
-        }
-        
-
-
-        .tempat-tag-detail-detail {
-            background-color: rgb(177, 179, 180); 
-            text-align: center;      
-            padding: 1vh 2.5vw;
-            border-radius: 1rem;
-            width:80%;
-            // margin: 0 1.6%;
-            font-size: 1rem;            
+    .tempat-tags {
+        width: 70%;
+        margin: 0 15%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        // justify-content: space-;
+        .tagg {
+            font-size: 1.2rem;
+            padding: .5rem 1.3rem;    
+            margin-bottom: .5rem;       
         }
     }
+    // .tempat-tag-detail{
+    //     display: grid;
+    //     grid-template-columns: auto ;
+       
+    //     width: 100%;        
+    //     gap: 2rem;
+    //     padding: 0 5%;
+        
+    //     @media (min-width: 600px) {
+    //         grid-template-columns: auto auto;              
+    //         }
+
+    //     @media (min-width: 800px) {
+    //     grid-template-columns: auto auto auto auto;          
+    //     }
+        
+
+
+    //     .tempat-tag-detail-detail {
+    //         display: inline;
+
+    //         background-color: rgb(177, 179, 180); 
+    //         text-align: center;      
+    //         // padding: 1vh 2.5vw;
+    //         border-radius: 1rem;
+    //         width:80%;
+    //         // margin: 0 1.6%;
+    //         font-size: 1rem;            
+    //     }
+    // }
 }
 
 .review-section {
@@ -227,10 +243,22 @@
         background-color: rgb(227, 236, 255);        
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
         width: 20%;
         padding: .5vh 0 ;
+
+        div {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        p {
+            font-size: 1rem;
+            font-weight: 600;
+        }
     }
 
     .scoree{
