@@ -39,6 +39,16 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
+    .userr {
+        display: flex;
+        li{
+            margin: 0 1vw;
+            list-style: none;
+            a {
+                text-decoration: none;               
+            }
+        }
+    }
 }
 
 footer {

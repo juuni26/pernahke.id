@@ -560,6 +560,9 @@ const Main = () => {
               title="Foto"
               dataIndex="foto"
               key="foto"
+              render={urls=>{
+                
+              }}
 
             />
           </Table>:""}

@@ -13,10 +13,10 @@ function App() {
   return (
     <BaseProvider>
       <Router>
-        {/* <Layout>
+        <Layout>
         <Home/>
-        </Layout> */}
-        <Main />             
+        </Layout>
+        {/* <Main />              */}
       </Router>
     </BaseProvider>
   );

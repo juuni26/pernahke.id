@@ -27,7 +27,10 @@ const LayoutContent = props => {
         <div className="layoutt">
             <nav className="navbarr">
                 <div className="logo">ini logo</div>
-                <div className="user">user section</div>
+                <ul className="userr">
+                    <li><a>Login</a></li>
+                    <li><a>Register</a></li>
+                </ul>
             </nav>
             <div className="containerr">{props.children}</div>
             <footer><h5>pernahke @2020</h5></footer>
