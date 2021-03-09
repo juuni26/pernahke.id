@@ -5,6 +5,8 @@ import { BaseProvider } from "./BaseContext";
 import Main from "./Main";
 import Home from "./Page/Home";
 import Layout from './Layout';
+import Routes from './Routes';
+
 
 
 import "antd/dist/antd.css";
@@ -14,7 +16,7 @@ function App() {
     <BaseProvider>
       <Router>
         <Layout>
-        <Home/>
+          <Routes/>        
         </Layout>
         {/* <Main />              */}
       </Router>
