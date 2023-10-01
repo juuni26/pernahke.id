@@ -1,5 +1,5 @@
 # pernahke.id
-pernahke Platform
+Pernahke Platform
 
 Social hub app related to tourism place, where people can share their view and interact with others about some tourism destination in Indonesia. Winning Application Baparekraf challenge dicoding.
 Stacks:
